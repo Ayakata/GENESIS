@@ -1,0 +1,32 @@
+{
+  "acceptance": {
+    "all_repeat_pairs_deterministic": true,
+    "control_exact_inheritance": true,
+    "gene_count": 8,
+    "independent_processes": 12,
+    "max_abs_combined_balance_error": 3.8198777474462986e-11,
+    "mutation_created_bounded_variation": true,
+    "population_cap_not_reached": true,
+    "repeat_pairs": 6,
+    "total_primary_births": 998,
+    "total_primary_mutated_loci": 570
+  },
+  "build": "passed: wheel and sdist",
+  "implementation_commit": "3ff71755a53d108baf1506a21e6015a06240910b",
+  "platform": "Windows amd64",
+  "python_3_11_9": {
+    "mypy": "passed: strict, 26 source files",
+    "pytest": "146 passed in 9.60s",
+    "ruff": "passed"
+  },
+  "python_3_12_7": {
+    "format": "passed: 48 files",
+    "mypy": "passed: strict, 26 source files",
+    "pytest": "146 passed in 9.47s",
+    "ruff": "passed"
+  },
+  "regression_scenarios": {
+    "s01_agents": "passed: 12 processes, 6/6 deterministic pairs",
+    "s01_environment": "passed: 13 processes"
+  }
+}

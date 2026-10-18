@@ -1,5 +1,31 @@
 # Журнал проверенного прогресса
 
+## 2026-10-18 — S01-4 принят
+
+Единственный источник статуса — `GENESIS_ROADMAP.md`: **4/8** задач Sprint 01.
+Коммит реализации: `3ff71755a53d108baf1506a21e6015a06240910b`.
+
+| Проверка | Результат | Доказательство |
+| --- | --- | --- |
+| pytest, CPython 3.11.9/Windows | 146 passed in 9.60s | s01_evolution/evidence/verification/ |
+| pytest, CPython 3.12.7/Windows | 146 passed in 9.47s | s01_evolution/evidence/verification/ |
+| Ruff lint/format, mypy strict | успешно | s01_evolution/evidence/verification/ |
+| Сборка wheel + sdist | успешно | s01_evolution/evidence/verification/ |
+| Контроль/мутации × 3 seeds × 2 | 6/6 пар идентичны | s01_evolution/evidence/acceptance/ |
+| Контроль без мутаций | точное наследование, variance=0 | acceptance/report.json |
+| Мутационный режим | 570 локусов, bounded variation | acceptance/report.json |
+| Максимальный совокупный остаток | 3.8198777474462986e-11 | acceptance/report.json |
+
+Восемь генов влияют на механику через документированные компромиссы, но метрики
+не участвуют в отборе. Во всех 12 процессах лимит популяции оставался неактивным,
+а manifest фиксирует чистый implementation SHA. Регрессионные сценарии S01-1—S01-3
+также прошли: 13 процессов среды и 12 процессов агентов.
+
+Схемы config/state/artifact обновлены до v3. Ограничение популяции снижено до 250 000
+из-за временных матриц движения; профиль памяти и скорости относится к S01-5.
+Результат доказывает механику наследуемой вариативности, но не адаптацию и не
+возникновение жизни. Следующее действие — S01-5, затем checkpoints/events в S01-6.
+
 ## 2026-10-18 — S01-3 принят
 
 Единственный источник статуса — `GENESIS_ROADMAP.md`: **3/8** задач Sprint 01.

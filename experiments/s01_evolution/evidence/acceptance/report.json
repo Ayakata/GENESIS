@@ -1,0 +1,108 @@
+{
+  "all_pairs_deterministic": true,
+  "control_exact_inheritance": true,
+  "gene_count": 8,
+  "limitations": [
+    "This validates inheritance mechanics, not adaptive evolution.",
+    "Trait distributions are not compared between selective environments until S01-8.",
+    "The agents and reproduction operation remain predefined sandbox mechanisms."
+  ],
+  "max_abs_combined_balance_error": 3.8198777474462986e-11,
+  "mutation_created_bounded_variation": true,
+  "pairs": [
+    {
+      "births": 157,
+      "deterministic": true,
+      "final_unique_genomes": 1,
+      "genetic_variance_mean": 0.0,
+      "mutated_loci": 0,
+      "population": 157,
+      "runs": [
+        "control_0_a",
+        "control_0_b"
+      ],
+      "scenario": "control",
+      "seed": 0,
+      "state_digest": "c59244105683a924d1c0be81114ac0288bab24fce3afa8e4f9f6573e452c9aa2"
+    },
+    {
+      "births": 138,
+      "deterministic": true,
+      "final_unique_genomes": 1,
+      "genetic_variance_mean": 0.0,
+      "mutated_loci": 0,
+      "population": 138,
+      "runs": [
+        "control_42_a",
+        "control_42_b"
+      ],
+      "scenario": "control",
+      "seed": 42,
+      "state_digest": "adcb06545cff93d1a7703c59595c826a9af7efcf536acd9a14d015a750b4e4cb"
+    },
+    {
+      "births": 212,
+      "deterministic": true,
+      "final_unique_genomes": 1,
+      "genetic_variance_mean": 0.0,
+      "mutated_loci": 0,
+      "population": 212,
+      "runs": [
+        "control_2026_a",
+        "control_2026_b"
+      ],
+      "scenario": "control",
+      "seed": 2026,
+      "state_digest": "a68beb105f129b608e474a0843b2807a0af11071e4ae3ab2856ea7f37aa2f37d"
+    },
+    {
+      "births": 152,
+      "deterministic": true,
+      "final_unique_genomes": 99,
+      "genetic_variance_mean": 0.0017411541787851388,
+      "mutated_loci": 150,
+      "population": 152,
+      "runs": [
+        "mutation_0_a",
+        "mutation_0_b"
+      ],
+      "scenario": "mutation",
+      "seed": 0,
+      "state_digest": "fe5c6d1b31c6ff84db99401b0a1a2d044d413f3380fbd0f7ac1a4d18624d547a"
+    },
+    {
+      "births": 136,
+      "deterministic": true,
+      "final_unique_genomes": 97,
+      "genetic_variance_mean": 0.0020337853328196583,
+      "mutated_loci": 163,
+      "population": 136,
+      "runs": [
+        "mutation_42_a",
+        "mutation_42_b"
+      ],
+      "scenario": "mutation",
+      "seed": 42,
+      "state_digest": "89e68fa885503069259ddf029d0927a622469f1e523aa1c36dbcb8c40d403f9b"
+    },
+    {
+      "births": 203,
+      "deterministic": true,
+      "final_unique_genomes": 152,
+      "genetic_variance_mean": 0.0024515654506732576,
+      "mutated_loci": 257,
+      "population": 203,
+      "runs": [
+        "mutation_2026_a",
+        "mutation_2026_b"
+      ],
+      "scenario": "mutation",
+      "seed": 2026,
+      "state_digest": "3945fd206f7d783bed836eccddb674464ab1f37b21f802f374a8491da6f5f17c"
+    }
+  ],
+  "population_cap_not_reached": true,
+  "runs": 12,
+  "total_primary_births": 998,
+  "total_primary_mutated_loci": 570
+}

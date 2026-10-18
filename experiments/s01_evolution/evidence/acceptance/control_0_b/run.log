@@ -1,0 +1,2 @@
+INFO genesis: Started seed=0 shape=(48, 64) agents=128 steps=300
+INFO genesis: Completed tick=300 balance_error=-9.78e-12
