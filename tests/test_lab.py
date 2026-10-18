@@ -40,6 +40,7 @@ def test_batch_serial_and_parallel_are_scientifically_identical(tmp_path):
         assert manifest["status"] == "completed"
         assert manifest["batch_schema_version"] == 1
         assert (root / "runs" / "baseline" / "seed-1" / "final_state.npz").is_file()
+        assert "Completed" in (root / "runs" / "baseline" / "seed-1" / "run.log").read_text()
 
 
 @pytest.mark.parametrize(

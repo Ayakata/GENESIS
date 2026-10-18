@@ -29,11 +29,19 @@ def run_artifact(config: Config, output: Path) -> dict[str, Any]:
     manifest = start_run(output, config)
     handler = logging.FileHandler(output / "run.log", encoding="utf-8")
     handler.setFormatter(logging.Formatter("%(levelname)s %(name)s: %(message)s"))
-    LOG.addHandler(handler)
+    file_log = logging.Logger("genesis.run", logging.INFO)
+    file_log.addHandler(handler)
     started = perf_counter()
     try:
         sim = SandboxSimulation(config)
         LOG.info(
+            "Started seed=%d shape=%s agents=%d steps=%d",
+            config.seed,
+            sim.world.resource.shape,
+            sim.agents.count,
+            config.run.steps,
+        )
+        file_log.info(
             "Started seed=%d shape=%s agents=%d steps=%d",
             config.seed,
             sim.world.resource.shape,
@@ -88,14 +96,20 @@ def run_artifact(config: Config, output: Path) -> dict[str, Any]:
             sim.world.tick,
             summary["metrics"]["balance_error"],
         )
+        file_log.info(
+            "Completed tick=%d balance_error=%.3g",
+            sim.world.tick,
+            summary["metrics"]["balance_error"],
+        )
         return summary
     except BaseException as exc:
         LOG.exception("Run failed")
+        file_log.exception("Run failed")
         manifest.update(status="failed", error=f"{type(exc).__name__}: {exc}")
         write_json(output / "manifest.json", manifest)
         raise
     finally:
-        LOG.removeHandler(handler)
+        file_log.removeHandler(handler)
         handler.close()
 
 
