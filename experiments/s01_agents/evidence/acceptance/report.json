@@ -1,0 +1,82 @@
+{
+  "all_pairs_deterministic": true,
+  "limitations": [
+    "The temporary agents are predefined mechanisms, not emergent life.",
+    "No genes or mutation are present before S01-4.",
+    "Terminal NPZ files are evidence artifacts, not resumable checkpoints."
+  ],
+  "max_abs_agent_balance_error": 3.387867764104158e-11,
+  "max_abs_combined_balance_error": 4.069988790433854e-11,
+  "max_abs_resource_balance_error": 2.3646862246096134e-11,
+  "pairs": [
+    {
+      "boundary": "closed",
+      "deterministic": true,
+      "population": 6,
+      "runs": [
+        "agents_closed_0_a",
+        "agents_closed_0_b"
+      ],
+      "seed": 0,
+      "state_digest": "69ea0311e7fb92e5f6b98bead1a73af30f3f266927d6d9abbb634460f945c887"
+    },
+    {
+      "boundary": "closed",
+      "deterministic": true,
+      "population": 6,
+      "runs": [
+        "agents_closed_42_a",
+        "agents_closed_42_b"
+      ],
+      "seed": 42,
+      "state_digest": "5d800c819aacad51b24264ef85aade32ae2d24c18c374e3a626c6875473209f2"
+    },
+    {
+      "boundary": "closed",
+      "deterministic": true,
+      "population": 33,
+      "runs": [
+        "agents_closed_2026_a",
+        "agents_closed_2026_b"
+      ],
+      "seed": 2026,
+      "state_digest": "43e4c0a661cc9f5d092e992bed9be32f8a0b29be996665846319d077f418493e"
+    },
+    {
+      "boundary": "periodic",
+      "deterministic": true,
+      "population": 10,
+      "runs": [
+        "agents_periodic_0_a",
+        "agents_periodic_0_b"
+      ],
+      "seed": 0,
+      "state_digest": "c6e8028d086360ccc09988b0ee5214c62bbf46eea45ec78139dab418b63b7c4a"
+    },
+    {
+      "boundary": "periodic",
+      "deterministic": true,
+      "population": 20,
+      "runs": [
+        "agents_periodic_42_a",
+        "agents_periodic_42_b"
+      ],
+      "seed": 42,
+      "state_digest": "de26195de8444a734d6e2358585ebec01cfc0195489952b6955cfd68e2fcf7aa"
+    },
+    {
+      "boundary": "periodic",
+      "deterministic": true,
+      "population": 33,
+      "runs": [
+        "agents_periodic_2026_a",
+        "agents_periodic_2026_b"
+      ],
+      "seed": 2026,
+      "state_digest": "3a48543040cc4046e8be4d2c3e9d8ae6ddc8ba7e589630a7871b7b3d2195f064"
+    }
+  ],
+  "runs": 12,
+  "total_births": 1442,
+  "total_deaths": 2762
+}

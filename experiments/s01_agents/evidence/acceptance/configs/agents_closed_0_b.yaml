@@ -1,0 +1,42 @@
+schema_version: 2
+seed: 0
+world:
+  width: 64
+  height: 48
+  boundary: closed
+terrain:
+  kind: archipelago
+  islands: 6
+  radius: 0.15
+  sea_level: 0.3
+  noise: 0.06
+conditions:
+  equator_temperature: 25.0
+  polar_drop: 20.0
+  elevation_drop: 10.0
+  humidity_min: 0.2
+  humidity_max: 1.0
+  light_min: 0.3
+  light_max: 1.0
+resource:
+  initial_min: 0.5
+  initial_max: 1.5
+  source_rate: 0.01
+  diffusion: 0.1
+  decay: 0.002
+agents:
+  initial_count: 128
+  max_population: 4096
+  initial_energy: 5.0
+  basal_cost: 0.02
+  move_cost: 0.03
+  intake_rate: 0.4
+  assimilation_efficiency: 0.8
+  reproduction_threshold: 12.0
+  offspring_energy: 4.0
+  reproduction_cost: 0.2
+  max_age: 240
+  death_recycle_fraction: 0.5
+run:
+  steps: 300
+  metrics_interval: 25

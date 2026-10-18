@@ -1,0 +1,72 @@
+{
+  "artifact_schema_version": 2,
+  "config": {
+    "agents": {
+      "assimilation_efficiency": 0.8,
+      "basal_cost": 0.02,
+      "death_recycle_fraction": 0.5,
+      "initial_count": 128,
+      "initial_energy": 5.0,
+      "intake_rate": 0.4,
+      "max_age": 240,
+      "max_population": 4096,
+      "move_cost": 0.03,
+      "offspring_energy": 4.0,
+      "reproduction_cost": 0.2,
+      "reproduction_threshold": 12.0
+    },
+    "conditions": {
+      "elevation_drop": 10.0,
+      "equator_temperature": 25.0,
+      "humidity_max": 1.0,
+      "humidity_min": 0.2,
+      "light_max": 1.0,
+      "light_min": 0.3,
+      "polar_drop": 20.0
+    },
+    "resource": {
+      "decay": 0.002,
+      "diffusion": 0.1,
+      "initial_max": 1.5,
+      "initial_min": 0.5,
+      "source_rate": 0.01
+    },
+    "run": {
+      "metrics_interval": 25,
+      "steps": 300
+    },
+    "schema_version": 2,
+    "seed": 42,
+    "terrain": {
+      "islands": 6,
+      "kind": "archipelago",
+      "noise": 0.06,
+      "radius": 0.15,
+      "sea_level": 0.3
+    },
+    "world": {
+      "boundary": "closed",
+      "height": 48,
+      "width": 64
+    }
+  },
+  "provenance": {
+    "backend": "numpy-cpu-float64",
+    "dependencies": {
+      "PyYAML": "6.0.3",
+      "numpy": "2.3.5"
+    },
+    "git_commit": "f276f1aef44d74d50d5c174c0ba18a4692c3bb47",
+    "git_dirty": false,
+    "machine": "AMD64",
+    "package_version": "0.1.0",
+    "platform": "Windows-10-10.0.19045-SP0",
+    "python": "3.12.7 (tags/v3.12.7:0b05ead, Oct  1 2024, 03:06:41) [MSC v.1941 64 bit (AMD64)]",
+    "rng": "PCG64/SeedSequence.spawn-v1",
+    "source_sha256": "f7d6c5fcabdbb1e4918a81a7abf32ea1e3caa93a6c7bfc1bbab8c50e760de01f"
+  },
+  "ruleset_version": "environment-v1+agents-v1",
+  "state_digest": "5d800c819aacad51b24264ef85aade32ae2d24c18c374e3a626c6875473209f2",
+  "state_schema_version": 2,
+  "status": "completed"
+}

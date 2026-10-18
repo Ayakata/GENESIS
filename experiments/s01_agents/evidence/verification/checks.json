@@ -1,0 +1,25 @@
+{
+  "acceptance": {
+    "all_repeat_pairs_deterministic": true,
+    "independent_processes": 12,
+    "max_abs_agent_balance_error": 3.387867764104158e-11,
+    "max_abs_combined_balance_error": 4.069988790433854e-11,
+    "max_abs_resource_balance_error": 2.3646862246096134e-11,
+    "repeat_pairs": 6
+  },
+  "build": "passed: wheel and sdist",
+  "implementation_commit": "f276f1aef44d74d50d5c174c0ba18a4692c3bb47",
+  "mypy": "passed: strict, 24 source files",
+  "platform": "Windows amd64",
+  "python_3_11_9": {
+    "mypy": "passed: strict, 24 source files",
+    "pytest": "123 passed",
+    "ruff": "passed"
+  },
+  "python_3_12_7": {
+    "format": "passed: 41 files",
+    "mypy": "passed: strict, 24 source files",
+    "pytest": "123 passed in 8.95s",
+    "ruff": "passed"
+  }
+}

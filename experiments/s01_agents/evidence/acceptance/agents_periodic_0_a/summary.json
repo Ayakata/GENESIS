@@ -1,0 +1,33 @@
+{
+  "elapsed_seconds": 0.218429499771446,
+  "metrics": {
+    "agent_age_mean": 230.9,
+    "agent_balance_error": 2.5536905923218e-11,
+    "agent_energy_mean": 3.9912534880530828,
+    "agent_energy_total": 39.91253488053083,
+    "assimilated_total": 3433.315518774238,
+    "assimilation_loss_total": 858.3288796935593,
+    "balance_error": -7.048583938740194e-12,
+    "basal_loss_total": 1200.4494904490148,
+    "births": 124,
+    "combined_balance_error": 1.5006662579253316e-11,
+    "combined_energy_total": 625.024018439719,
+    "consumed_total": 4291.644398467801,
+    "death_loss_total": 536.701746722359,
+    "death_recycled_total": 536.701746722359,
+    "deaths": 242,
+    "land_cells": 2116,
+    "movement_loss_total": 1734.7500000000002,
+    "population": 10,
+    "reproduction_loss_total": 24.79999999999999,
+    "resource_max": 5.401095745050066,
+    "resource_min": 0.0,
+    "resource_total": 585.1114835591882,
+    "sink_total": 221.0810350769808,
+    "source_total": 2447.817279584376,
+    "tick": 300,
+    "transfer_in_total": 536.701746722359,
+    "transfer_out_total": 4291.644398467801
+  },
+  "state_digest": "c6e8028d086360ccc09988b0ee5214c62bbf46eea45ec78139dab418b63b7c4a"
+}
