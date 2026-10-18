@@ -1,0 +1,16 @@
+# Control: transport alone must conserve the total; this is an open work item for agents later.
+schema_version: 1
+seed: 42
+world:
+  width: 32
+  height: 24
+  boundary: closed
+terrain:
+  kind: uniform
+resource:
+  source_rate: 0.0
+  diffusion: 0.25
+  decay: 0.0
+run:
+  steps: 500
+  metrics_interval: 25

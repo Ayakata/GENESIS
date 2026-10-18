@@ -1,0 +1,4 @@
+# Verified CPU runtime; package itself is installed separately from source/wheel.
+numpy==2.3.5
+PyYAML==6.0.3
+setuptools==84.0.0
