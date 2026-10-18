@@ -43,6 +43,7 @@ def test_cli_end_to_end_separate_processes(tmp_path):
         with np.load(directory / "final_state.npz", allow_pickle=False) as state:
             assert state["tick"].item() == 11
             assert state["resource"].shape == (64, 96)
+            assert "agent_ids" in state
     assert summaries[0]["state_digest"] == summaries[1]["state_digest"]
     for name in ("metrics.jsonl", "config.resolved.yaml"):
         assert (tmp_path / "a" / name).read_bytes() == (tmp_path / "b" / name).read_bytes()
@@ -89,6 +90,8 @@ def test_determinism_under_different_python_hash_seeds(tmp_path):
         assert result.returncode == 0, result.stderr
         digests.append(json.loads(result.stdout)["state_digest"])
     assert digests[0] == digests[1]
+    with np.load(tmp_path / "1" / "final_state.npz", allow_pickle=False) as state:
+        assert state["agent_ids"].size > 0
 
 
 def test_failed_run_is_marked_and_file_handler_closed(tmp_path, monkeypatch):

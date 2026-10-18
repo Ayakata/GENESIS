@@ -7,6 +7,7 @@ from dataclasses import asdict, dataclass, field, fields, is_dataclass
 from pathlib import Path
 from typing import Any, Literal, TypeVar, get_args, get_origin, get_type_hints
 
+import numpy as np
 import yaml
 
 from genesis import CONFIG_SCHEMA_VERSION
@@ -76,6 +77,53 @@ class ResourceConfig:
 
 
 @dataclass(frozen=True)
+class AgentConfig:
+    initial_count: int = 0
+    max_population: int = 4096
+    initial_energy: float = 5.0
+    basal_cost: float = 0.02
+    move_cost: float = 0.03
+    intake_rate: float = 0.4
+    assimilation_efficiency: float = 0.8
+    reproduction_threshold: float = 12.0
+    offspring_energy: float = 4.0
+    reproduction_cost: float = 0.2
+    max_age: int = 400
+    death_recycle_fraction: float = 0.5
+
+    def __post_init__(self) -> None:
+        if not 0 <= self.initial_count <= self.max_population <= 1_000_000:
+            raise ConfigError("agents: require 0 <= initial_count <= max_population <= 1000000")
+        if not 1 <= self.max_age <= np.iinfo(np.uint32).max:
+            raise ConfigError("agents.max_age must fit uint32 and be >= 1")
+        nonnegative = (
+            self.initial_energy,
+            self.basal_cost,
+            self.move_cost,
+            self.intake_rate,
+            self.reproduction_threshold,
+            self.offspring_energy,
+            self.reproduction_cost,
+        )
+        if any(not math.isfinite(value) or value < 0 for value in nonnegative):
+            raise ConfigError("agents: energies, rates and action costs must be nonnegative")
+        if self.initial_count and self.initial_energy == 0:
+            raise ConfigError("agents.initial_energy must be positive when agents are configured")
+        if not math.isfinite(self.assimilation_efficiency) or not (
+            0 <= self.assimilation_efficiency <= 1
+        ):
+            raise ConfigError("agents.assimilation_efficiency must be in [0,1]")
+        if not math.isfinite(self.death_recycle_fraction) or not (
+            0 <= self.death_recycle_fraction <= 1
+        ):
+            raise ConfigError("agents.death_recycle_fraction must be in [0,1]")
+        if self.reproduction_threshold < self.offspring_energy + self.reproduction_cost:
+            raise ConfigError(
+                "agents.reproduction_threshold must cover offspring_energy + reproduction_cost"
+            )
+
+
+@dataclass(frozen=True)
 class RunConfig:
     steps: int = 200
     metrics_interval: int = 10
@@ -93,6 +141,7 @@ class Config:
     terrain: TerrainConfig = field(default_factory=TerrainConfig)
     conditions: ConditionsConfig = field(default_factory=ConditionsConfig)
     resource: ResourceConfig = field(default_factory=ResourceConfig)
+    agents: AgentConfig = field(default_factory=AgentConfig)
     run: RunConfig = field(default_factory=RunConfig)
 
     def __post_init__(self) -> None:
@@ -101,9 +150,13 @@ class Config:
         if not 0 <= self.seed < 2**64:
             raise ConfigError("seed must be in [0,2**64)")
         # These are intentionally generous numerical guards, not biological constraints.
-        values = (*asdict(self.conditions).values(), *asdict(self.resource).values())
+        values = (
+            *asdict(self.conditions).values(),
+            *asdict(self.resource).values(),
+            *asdict(self.agents).values(),
+        )
         if any(not math.isfinite(v) or abs(v) > 1e12 for v in values):
-            raise ConfigError("conditions/resource values must be finite with magnitude <= 1e12")
+            raise ConfigError("numeric configuration must be finite with magnitude <= 1e12")
 
 
 class _Loader(yaml.SafeLoader):

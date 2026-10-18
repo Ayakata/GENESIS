@@ -2,7 +2,8 @@
 
 Лаборатория искусственной жизни. Долгосрочная цель — возникновение репликации,
 наследственности и организации из локальной цифровой химии.
-Первый спринт создаёт временный стенд готовых агентов; сейчас реализуется только среда.
+Первый спринт создаёт временный стенд готовых агентов. Сейчас реализованы среда и
+минимальные агенты S01-3; наследуемая вариативность появится в S01-4.
 
 ## Запуск на Windows (PowerShell)
 
@@ -20,6 +21,7 @@ $GenesisPython = 'H:\DEVELOPMENT\python.exe' # замените, если python
 & .\.venv\Scripts\python.exe -m genesis validate --config configs/archipelago.yaml
 & .\.venv\Scripts\python.exe -m pytest
 & .\.venv\Scripts\python.exe -m genesis run --config configs/archipelago.yaml --output runs/first
+& .\.venv\Scripts\python.exe experiments/s01_agents/reproduce.py --output runs/agents-check
 ```
 
 Активация venv не требуется; политика выполнения PowerShell не мешает запуску.
@@ -60,8 +62,9 @@ python -m build --no-isolation
 Время выполнения и сведения о платформе намеренно исключены из digest.
 NPZ открывается с `numpy.load(..., allow_pickle=False)`.
 
-Это проверочный запуск среды. Возобновление, полные RNG-checkpoints, события агентов,
-пакетный runner и эволюционные эксперименты ещё не реализованы (S01-3—S01-8).
+Это проверочный запуск среды и временных готовых агентов. Он не является доказательством
+эволюции или возникновения жизни. Возобновление, полные RNG-checkpoints, пакетный runner
+и эволюционные эксперименты ещё не реализованы (S01-4—S01-8).
 
 ## Документы
 
@@ -69,8 +72,10 @@ NPZ открывается с `numpy.load(..., allow_pickle=False)`.
 - `docs/ARCHITECTURE.md` — границы модулей и формулы модели.
 - `docs/ACCEPTANCE.md` — критерии приёмки и команды проверки.
 - `docs/decisions/0001-core.md` — решения и ограничения.
+- `docs/decisions/0002-agent-energy.md` — правила агентов и энергетический учёт.
 - `docs/PROGRESS.md` — журнал проверенных достижений.
 - `experiments/s01_environment/` — сценарий и сохранённые доказательства.
+- `experiments/s01_agents/` — проверка детерминизма и энергетики агентов.
 
 Если ZIP распакован без `.git`, восстановите историю из включённого `genesis.bundle`:
 `git clone genesis.bundle H:\dev\Genesis` (каталог назначения должен отсутствовать).

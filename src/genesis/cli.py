@@ -11,10 +11,10 @@ from time import perf_counter
 from typing import Any
 
 from genesis import __version__
+from genesis.agents.metrics import measure_sandbox
+from genesis.agents.simulation import SandboxSimulation
 from genesis.config import Config, ConfigError, dump_config, load_config
-from genesis.core.simulation import Simulation
-from genesis.history.artifacts import start_run, write_final_state, write_json
-from genesis.lab.metrics import measure
+from genesis.history.artifacts import start_run, write_json, write_sandbox_final_state
 
 LOG = logging.getLogger("genesis")
 
@@ -26,34 +26,48 @@ def run(config: Config, output: Path) -> dict[str, Any]:
     LOG.addHandler(handler)
     started = perf_counter()
     try:
-        sim = Simulation(config)
+        sim = SandboxSimulation(config)
         LOG.info(
-            "Started seed=%d shape=%s steps=%d",
+            "Started seed=%d shape=%s agents=%d steps=%d",
             config.seed,
-            sim.state.resource.shape,
+            sim.world.resource.shape,
+            sim.agents.count,
             config.run.steps,
         )
         with (output / "metrics.jsonl").open("w", encoding="utf-8") as stream:
-            stream.write(json.dumps(measure(sim.state), allow_nan=False) + "\n")
+            stream.write(
+                json.dumps(
+                    measure_sandbox(sim.world, sim.agents, sim.agent_ledger), allow_nan=False
+                )
+                + "\n"
+            )
             for _ in range(config.run.steps):
                 sim.step()
                 if (
-                    sim.state.tick % config.run.metrics_interval == 0
-                    or sim.state.tick == config.run.steps
+                    sim.world.tick % config.run.metrics_interval == 0
+                    or sim.world.tick == config.run.steps
                 ):
-                    stream.write(json.dumps(measure(sim.state), allow_nan=False) + "\n")
-        write_final_state(output / "final_state.npz", sim.state)
+                    stream.write(
+                        json.dumps(
+                            measure_sandbox(sim.world, sim.agents, sim.agent_ledger),
+                            allow_nan=False,
+                        )
+                        + "\n"
+                    )
+        write_sandbox_final_state(
+            output / "final_state.npz", sim.world, sim.agents, sim.agent_ledger
+        )
         summary: dict[str, Any] = {
-            "state_digest": sim.state.digest(),
-            "metrics": measure(sim.state),
+            "state_digest": sim.digest(),
+            "metrics": measure_sandbox(sim.world, sim.agents, sim.agent_ledger),
             "elapsed_seconds": perf_counter() - started,
         }
         write_json(output / "summary.json", summary)
-        manifest.update(status="completed", state_digest=sim.state.digest())
+        manifest.update(status="completed", state_digest=sim.digest())
         write_json(output / "manifest.json", manifest)
         LOG.info(
             "Completed tick=%d balance_error=%.3g",
-            sim.state.tick,
+            sim.world.tick,
             summary["metrics"]["balance_error"],
         )
         return summary
@@ -68,7 +82,7 @@ def run(config: Config, output: Path) -> dict[str, Any]:
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(prog="genesis", description="Genesis environment sandbox")
+    parser = argparse.ArgumentParser(prog="genesis", description="Genesis evolution sandbox")
     parser.add_argument("--version", action="version", version=__version__)
     parser.add_argument(
         "--log-level", choices=("DEBUG", "INFO", "WARNING", "ERROR"), default="INFO"
@@ -78,7 +92,7 @@ def main(argv: list[str] | None = None) -> int:
     init.add_argument("--output", type=Path, required=True)
     validate = sub.add_parser("validate", help="validate config and print resolved YAML")
     validate.add_argument("--config", type=Path, required=True)
-    execute = sub.add_parser("run", help="run the environment-only verification harness")
+    execute = sub.add_parser("run", help="run the configured headless sandbox")
     execute.add_argument("--config", type=Path, required=True)
     execute.add_argument("--output", type=Path, required=True)
     execute.add_argument("--steps", type=int)

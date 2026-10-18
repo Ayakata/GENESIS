@@ -15,6 +15,7 @@ from typing import Any
 import numpy as np
 
 import genesis
+from genesis.agents.state import AgentLedger, AgentState
 from genesis.config import Config, dump_config
 from genesis.core.state import WorldState
 
@@ -95,5 +96,49 @@ def write_final_state(path: Path, state: WorldState) -> None:
         humidity=state.conditions.humidity,
         light=state.conditions.light,
         resource=state.resource,
-        ledger=np.array([state.initial_total, state.source_total, state.sink_total]),
+        ledger=np.array(
+            [
+                state.initial_total,
+                state.source_total,
+                state.sink_total,
+                state.transfer_in_total,
+                state.transfer_out_total,
+            ]
+        ),
+    )
+
+
+def write_sandbox_final_state(
+    path: Path, state: WorldState, population: AgentState, ledger: AgentLedger
+) -> None:
+    """Write an inspectable terminal artifact, not a resumable S01-6 checkpoint."""
+    np.savez_compressed(
+        path,
+        state_schema_version=np.array(genesis.STATE_SCHEMA_VERSION),
+        ruleset_version=np.array(genesis.RULESET_VERSION),
+        tick=np.array(state.tick),
+        elevation=state.conditions.elevation,
+        land=state.conditions.land,
+        temperature=state.conditions.temperature,
+        humidity=state.conditions.humidity,
+        light=state.conditions.light,
+        resource=state.resource,
+        resource_ledger=np.array(
+            [
+                state.initial_total,
+                state.source_total,
+                state.sink_total,
+                state.transfer_in_total,
+                state.transfer_out_total,
+            ]
+        ),
+        agent_ids=population.ids[: population.count],
+        agent_parent_ids=population.parent_ids[: population.count],
+        agent_x=population.x[: population.count],
+        agent_y=population.y[: population.count],
+        agent_energy=population.energy[: population.count],
+        agent_age=population.age[: population.count],
+        agent_next_id=np.array(population.next_id),
+        agent_ledger_names=np.array(tuple(asdict(ledger))),
+        agent_ledger_values=np.array(tuple(asdict(ledger).values()), dtype=np.float64),
     )

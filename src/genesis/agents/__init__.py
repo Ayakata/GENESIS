@@ -1,1 +1,5 @@
-"""Reserved for the temporary SoA agent sandbox (S01-3); no agent model yet."""
+"""Temporary ready-made-agent sandbox used to validate the Genesis engine."""
+
+from genesis.agents.simulation import SandboxSimulation
+
+__all__ = ["SandboxSimulation"]

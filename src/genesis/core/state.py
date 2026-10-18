@@ -29,6 +29,8 @@ class WorldState:
     tick: int = 0
     source_total: float = 0.0
     sink_total: float = 0.0
+    transfer_in_total: float = 0.0
+    transfer_out_total: float = 0.0
     initial_total: float = 0.0
 
     def assert_valid(self) -> None:
@@ -47,7 +49,13 @@ class WorldState:
             raise RuntimeError("Negative resource or resource outside land")
         if self.tick < 0 or any(
             not np.isfinite(v) or v < 0
-            for v in (self.source_total, self.sink_total, self.initial_total)
+            for v in (
+                self.source_total,
+                self.sink_total,
+                self.transfer_in_total,
+                self.transfer_out_total,
+                self.initial_total,
+            )
         ):
             raise RuntimeError("Invalid clock or resource ledger")
 
@@ -67,7 +75,14 @@ class WorldState:
             h.update(a.astype("u1" if a.dtype == np.bool_ else "<f8").tobytes(order="C"))
         h.update(
             np.array(
-                [self.initial_total, self.source_total, self.sink_total], dtype="<f8"
+                [
+                    self.initial_total,
+                    self.source_total,
+                    self.sink_total,
+                    self.transfer_in_total,
+                    self.transfer_out_total,
+                ],
+                dtype="<f8",
             ).tobytes()
         )
         return h.hexdigest()

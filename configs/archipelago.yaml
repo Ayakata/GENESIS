@@ -1,4 +1,4 @@
-schema_version: 1
+schema_version: 2
 seed: 42
 world:
   width: 96
@@ -24,6 +24,19 @@ resource:
   source_rate: 0.01
   diffusion: 0.10
   decay: 0.002
+agents:
+  initial_count: 64
+  max_population: 4096
+  initial_energy: 5.0
+  basal_cost: 0.02
+  move_cost: 0.03
+  intake_rate: 0.4
+  assimilation_efficiency: 0.8
+  reproduction_threshold: 12.0
+  offspring_energy: 4.0
+  reproduction_cost: 0.2
+  max_age: 400
+  death_recycle_fraction: 0.5
 run:
   steps: 200
   metrics_interval: 10

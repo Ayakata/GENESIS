@@ -7,7 +7,7 @@ import sys
 from dataclasses import replace
 from pathlib import Path
 
-from genesis.config import dump_config, load_config
+from genesis.config import AgentConfig, dump_config, load_config
 from genesis.history.artifacts import provenance, write_json
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -40,8 +40,12 @@ def main():
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
     args.output.mkdir(parents=True, exist_ok=False)
-    base_path = ROOT / "configs" / "archipelago.yaml"
-    base = load_config(base_path)
+    base = replace(
+        load_config(ROOT / "configs" / "archipelago.yaml"),
+        agents=AgentConfig(initial_count=0),
+    )
+    base_path = args.output.resolve() / "closed.yaml"
+    base_path.write_text(dump_config(base), encoding="utf-8")
     periodic_path = args.output.resolve() / "periodic.yaml"
     periodic_path.write_text(
         dump_config(replace(base, world=replace(base.world, boundary="periodic"))),

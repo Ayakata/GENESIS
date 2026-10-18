@@ -7,7 +7,13 @@ from genesis.core.state import WorldState
 
 def measure(state: WorldState) -> dict[str, int | float]:
     total = float(state.resource.sum(dtype=np.float64))
-    expected = state.initial_total + state.source_total - state.sink_total
+    expected = (
+        state.initial_total
+        + state.source_total
+        + state.transfer_in_total
+        - state.sink_total
+        - state.transfer_out_total
+    )
     return {
         "tick": state.tick,
         "land_cells": int(state.conditions.land.sum()),
@@ -16,5 +22,7 @@ def measure(state: WorldState) -> dict[str, int | float]:
         "resource_max": float(state.resource.max()),
         "source_total": state.source_total,
         "sink_total": state.sink_total,
+        "transfer_in_total": state.transfer_in_total,
+        "transfer_out_total": state.transfer_out_total,
         "balance_error": total - expected,
     }
