@@ -1,0 +1,107 @@
+{
+  "artifact_schema_version": 4,
+  "checkpoints": [
+    {
+      "file_sha256": "0de493c14c0d63aa64614223ada75be683fd111def6a67f574a771feda7ef411",
+      "path": "checkpoints/tick-000000000060.npz",
+      "sidecar": "checkpoints/tick-000000000060.json",
+      "state_digest": "4390d863888eb5bc481b941b280ae4a3cf38122c5090e54fe303944169c3de9f",
+      "tick": 60
+    },
+    {
+      "file_sha256": "6e2aeb2eeb7d7f71bd8cb879ac0c853063cb5be910595fd0ff70bb781bce090d",
+      "path": "checkpoints/tick-000000000120.npz",
+      "sidecar": "checkpoints/tick-000000000120.json",
+      "state_digest": "805f29c9e9527f2786a7005b50b8b21457a75edafa499e182d020dd2f0cd7a47",
+      "tick": 120
+    },
+    {
+      "file_sha256": "f766b6f46fb865b555c038644619b54db03266ab3d40a114ed2760ff4515ee9e",
+      "path": "checkpoints/tick-000000000180.npz",
+      "sidecar": "checkpoints/tick-000000000180.json",
+      "state_digest": "97323716e91b2600a76542525d292f9447e9054b2438efba0249e1a3c39c465e",
+      "tick": 180
+    }
+  ],
+  "config": {
+    "agents": {
+      "assimilation_efficiency": 0.8,
+      "basal_cost": 0.02,
+      "death_recycle_fraction": 0.5,
+      "initial_count": 96,
+      "initial_energy": 5.0,
+      "intake_rate": 0.4,
+      "max_age": 240,
+      "max_population": 2048,
+      "move_cost": 0.03,
+      "offspring_energy": 4.0,
+      "reproduction_cost": 0.2,
+      "reproduction_threshold": 12.0
+    },
+    "conditions": {
+      "elevation_drop": 10.0,
+      "equator_temperature": 25.0,
+      "humidity_max": 1.0,
+      "humidity_min": 0.2,
+      "light_max": 1.0,
+      "light_min": 0.3,
+      "polar_drop": 20.0
+    },
+    "evolution": {
+      "efficiency_cost": 0.01,
+      "initial_mean": 0.5,
+      "initial_std": 0.05,
+      "mutation_rate": 0.05,
+      "mutation_sigma": 0.08,
+      "sensing_cost": 0.005
+    },
+    "resource": {
+      "decay": 0.002,
+      "diffusion": 0.1,
+      "initial_max": 1.5,
+      "initial_min": 0.5,
+      "source_rate": 0.01
+    },
+    "run": {
+      "checkpoint_interval": 60,
+      "metrics_interval": 20,
+      "steps": 180
+    },
+    "schema_version": 4,
+    "seed": 0,
+    "terrain": {
+      "islands": 6,
+      "kind": "uniform",
+      "noise": 0.06,
+      "radius": 0.15,
+      "sea_level": 0.3
+    },
+    "world": {
+      "boundary": "periodic",
+      "height": 32,
+      "width": 48
+    }
+  },
+  "end_tick": 180,
+  "event_schema_version": 1,
+  "provenance": {
+    "backend": "numpy-cpu-float64",
+    "dependencies": {
+      "PyYAML": "6.0.3",
+      "numpy": "2.3.5"
+    },
+    "git_commit": "4d1f3686bdb68c78f01712d3c7f526aae61d1f50",
+    "git_dirty": false,
+    "machine": "AMD64",
+    "package_version": "0.1.0",
+    "platform": "Windows-10-10.0.19045-SP0",
+    "python": "3.12.7 (tags/v3.12.7:0b05ead, Oct  1 2024, 03:06:41) [MSC v.1941 64 bit (AMD64)]",
+    "rng": "PCG64/SeedSequence.spawn-v1",
+    "source_sha256": "1229e862f177c0130ebb702cb382b0abc67f609fb37fa5683e74fa5bd2532624"
+  },
+  "ruleset_version": "environment-v1+agents-v2+evolution-v1",
+  "start_tick": 0,
+  "state_digest": "97323716e91b2600a76542525d292f9447e9054b2438efba0249e1a3c39c465e",
+  "state_schema_version": 3,
+  "status": "completed"
+}

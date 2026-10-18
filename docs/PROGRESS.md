@@ -1,5 +1,36 @@
 # Журнал проверенного прогресса
 
+## 2026-10-18 — S01-6 принят
+
+Единственный источник статуса — `GENESIS_ROADMAP.md`: **6/8** задач Sprint 01.
+Коммит реализации: `4d1f3686bdb68c78f01712d3c7f526aae61d1f50`.
+
+| Проверка | Результат | Доказательство |
+| --- | --- | --- |
+| pytest, CPython 3.11.9/Windows | 173 passed in 25.16s | s01_history/evidence/verification/ |
+| pytest, CPython 3.12.7/Windows | 173 passed in 24.73s | s01_history/evidence/verification/ |
+| Ruff lint/format, mypy strict | успешно | s01_history/evidence/verification/ |
+| Сборка и установленный wheel resume | успешно | verification/checks.json |
+| Continuous против split 73+107 | 3/3 seeds полностью совпали | acceptance/report.json |
+| Checkpoint SHA-256 | 21/21 | acceptance/report.json |
+| Повреждённый checkpoint | отклонён без output | acceptance/report.json |
+| Максимальный совокупный остаток | 5.6843418860808015e-12 | acceptance/report.json |
+| Регрессии S01-1—S01-5 | все сценарии прошли | verification/checks.json |
+
+Config/artifact schemas повышены до v4; state остаётся v3, numerical ruleset не менялся.
+Checkpoint schema v1 сохраняет все массивы, ledgers, config, `next_id` и оба PCG64 state;
+sidecar проверяет SHA-256. CLI `resume` допускает менять только run-control и сохраняет
+lineage. `events.jsonl` содержит потоки каждого тика, snapshots, рождения с parent id,
+смерти, мутации и терминальный статус, не влияя на fitness.
+
+Девять отдельных процессов дали три точные пары continuous/split-resume: совпали digest,
+метрики, все итоговые массивы и 180 tick-events. Все run manifest фиксируют чистый SHA,
+логи непусты. Установленный wheel отдельно продолжен с тика 2 до тика 3.
+
+Ограничения: миграций старых checkpoint-схем, инкрементальных и распределённых snapshots
+нет; event journal описывает готовых агентов стенда. Следующее действие — S01-7,
+объединяющая проверка корректности и failure cases, затем S01-8. Блокера нет.
+
 ## 2026-10-18 — S01-5 принят
 
 Единственный источник статуса — `GENESIS_ROADMAP.md`: **5/8** задач Sprint 01.

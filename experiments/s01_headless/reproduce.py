@@ -123,7 +123,8 @@ def main() -> int:
             "Wall-clock throughput is machine-specific and is not part of scientific state.",
             "Process parallelism is accepted for isolation and capacity; speedup is "
             "measured, not assumed.",
-            "Each batch task currently writes full artifacts; resumable checkpoints remain S01-6.",
+            "Each batch task writes full artifacts and a final checkpoint; this I/O "
+            "affects throughput.",
         ],
     }
     required = (

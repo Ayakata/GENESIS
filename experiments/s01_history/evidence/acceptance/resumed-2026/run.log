@@ -1,0 +1,2 @@
+INFO genesis.run: Started seed=2026 shape=(32, 48) agents=189 steps=107
+INFO genesis.run: Completed tick=180 balance_error=3.85e-12

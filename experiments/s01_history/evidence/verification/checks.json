@@ -1,0 +1,29 @@
+{
+  "implementation_commit": "4d1f3686bdb68c78f01712d3c7f526aae61d1f50",
+  "pytest": {
+    "python_3_11_9_windows": "173 passed in 25.16s",
+    "python_3_12_7_windows": "173 passed in 24.73s"
+  },
+  "ruff_lint": "passed",
+  "ruff_format": "60 files already formatted",
+  "mypy_strict": "passed, 29 source files",
+  "build": "wheel and sdist built successfully",
+  "wheel_resume_smoke": "installed wheel; resumed tick 2 to tick 3 successfully",
+  "regressions": {
+    "s01_environment": "passed, 13 process runs",
+    "s01_agents": "passed, 12 process runs, 6/6 deterministic pairs",
+    "s01_evolution": "passed, 12 process runs, 6/6 deterministic pairs",
+    "s01_headless": "passed, 6/6 serial/parallel tasks scientifically identical"
+  },
+  "s01_history_acceptance": {
+    "process_runs": 9,
+    "exact_resume_pairs": "3/3",
+    "checkpoints": 21,
+    "checkpoint_hashes_valid": true,
+    "corruption_rejected_without_output": true,
+    "tick_events_exact": true,
+    "genealogy_counts_consistent": true,
+    "max_abs_combined_balance_error": 5.6843418860808015e-12,
+    "clean_completed_manifests": 9
+  }
+}

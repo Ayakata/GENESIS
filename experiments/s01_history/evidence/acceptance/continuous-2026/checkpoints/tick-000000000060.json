@@ -1,0 +1,10 @@
+{
+  "checkpoint_schema_version": 1,
+  "config_sha256": "ad6a570d50a8f8c3e6706c675bea6a66bcd424ed9f77b5513983a02f1e0f476a",
+  "file": "tick-000000000060.npz",
+  "file_sha256": "6eb4d9ad2afc46a091910a946a299a7757aa57b1d470d3409df14fedb71a1514",
+  "ruleset_version": "environment-v1+agents-v2+evolution-v1",
+  "state_digest": "dee2f2a6bf326aaa18c9abd524afb876c2b1c622aa1b7eb03a240603da20591d",
+  "state_schema_version": 3,
+  "tick": 60
+}

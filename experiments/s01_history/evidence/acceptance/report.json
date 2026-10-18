@@ -1,0 +1,76 @@
+{
+  "all_checkpoint_hashes_valid": true,
+  "all_pairs_exact": true,
+  "all_run_logs_nonempty": true,
+  "checkpoint_count": 21,
+  "corruption_rejected_without_output": true,
+  "limitations": [
+    "Only the current checkpoint schema is loaded; migrations are not implemented.",
+    "Snapshots are complete local files, not incremental or distributed checkpoints.",
+    "The event journal records the predefined-agent sandbox, not emergent life."
+  ],
+  "max_abs_combined_balance_error": 5.6843418860808015e-12,
+  "pairs": [
+    {
+      "continuous_digest": "97323716e91b2600a76542525d292f9447e9054b2438efba0249e1a3c39c465e",
+      "digest_match": true,
+      "event_genealogy_consistent": true,
+      "event_schema_valid": true,
+      "final_npz_match": true,
+      "first_digest": "6c2c416ffa7dd2744f881320dc77c2e3be4418946638c527b24cb18bef433770",
+      "lineage_digest": "6c2c416ffa7dd2744f881320dc77c2e3be4418946638c527b24cb18bef433770",
+      "lineage_tick": 73,
+      "metrics_match": true,
+      "resume_end_tick": 180,
+      "resume_start_tick": 73,
+      "resumed_digest": "97323716e91b2600a76542525d292f9447e9054b2438efba0249e1a3c39c465e",
+      "seed": 0,
+      "tick_events_match": true
+    },
+    {
+      "continuous_digest": "51462a66a7e451233aaa984c47d7886096fea4872b19519cc1c824dbdc9e785d",
+      "digest_match": true,
+      "event_genealogy_consistent": true,
+      "event_schema_valid": true,
+      "final_npz_match": true,
+      "first_digest": "8424cd918843161cbead251a87c07000d3eb41c6d96974a093459ca10ed7afb2",
+      "lineage_digest": "8424cd918843161cbead251a87c07000d3eb41c6d96974a093459ca10ed7afb2",
+      "lineage_tick": 73,
+      "metrics_match": true,
+      "resume_end_tick": 180,
+      "resume_start_tick": 73,
+      "resumed_digest": "51462a66a7e451233aaa984c47d7886096fea4872b19519cc1c824dbdc9e785d",
+      "seed": 42,
+      "tick_events_match": true
+    },
+    {
+      "continuous_digest": "f7cabcd7b1013aeeb56b39b740d4583be5d9a8f37723c0b28dfdc01ffee1cce6",
+      "digest_match": true,
+      "event_genealogy_consistent": true,
+      "event_schema_valid": true,
+      "final_npz_match": true,
+      "first_digest": "d537cdb16da224f6d38f1bec7fce39654d7c0f6c3266c0f6d2607e411d429793",
+      "lineage_digest": "d537cdb16da224f6d38f1bec7fce39654d7c0f6c3266c0f6d2607e411d429793",
+      "lineage_tick": 73,
+      "metrics_match": true,
+      "resume_end_tick": 180,
+      "resume_start_tick": 73,
+      "resumed_digest": "f7cabcd7b1013aeeb56b39b740d4583be5d9a8f37723c0b28dfdc01ffee1cce6",
+      "seed": 2026,
+      "tick_events_match": true
+    }
+  ],
+  "process_runs": 9,
+  "schema_versions": {
+    "artifact": 4,
+    "checkpoint": 1,
+    "config": 4,
+    "event": 1,
+    "state": 3
+  },
+  "seeds": [
+    0,
+    42,
+    2026
+  ]
+}

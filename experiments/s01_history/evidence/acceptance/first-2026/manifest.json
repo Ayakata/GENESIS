@@ -1,0 +1,100 @@
+{
+  "artifact_schema_version": 4,
+  "checkpoints": [
+    {
+      "file_sha256": "e7d94e36aa6680813d2f8bd6383a663b0db46ce6b6840ed867fd24df2e253a98",
+      "path": "checkpoints/tick-000000000060.npz",
+      "sidecar": "checkpoints/tick-000000000060.json",
+      "state_digest": "dee2f2a6bf326aaa18c9abd524afb876c2b1c622aa1b7eb03a240603da20591d",
+      "tick": 60
+    },
+    {
+      "file_sha256": "87ac106f9bed5938840658ca83dc3f450e5f1821e7323244c8586f5aa41c0d27",
+      "path": "checkpoints/tick-000000000073.npz",
+      "sidecar": "checkpoints/tick-000000000073.json",
+      "state_digest": "d537cdb16da224f6d38f1bec7fce39654d7c0f6c3266c0f6d2607e411d429793",
+      "tick": 73
+    }
+  ],
+  "config": {
+    "agents": {
+      "assimilation_efficiency": 0.8,
+      "basal_cost": 0.02,
+      "death_recycle_fraction": 0.5,
+      "initial_count": 96,
+      "initial_energy": 5.0,
+      "intake_rate": 0.4,
+      "max_age": 240,
+      "max_population": 2048,
+      "move_cost": 0.03,
+      "offspring_energy": 4.0,
+      "reproduction_cost": 0.2,
+      "reproduction_threshold": 12.0
+    },
+    "conditions": {
+      "elevation_drop": 10.0,
+      "equator_temperature": 25.0,
+      "humidity_max": 1.0,
+      "humidity_min": 0.2,
+      "light_max": 1.0,
+      "light_min": 0.3,
+      "polar_drop": 20.0
+    },
+    "evolution": {
+      "efficiency_cost": 0.01,
+      "initial_mean": 0.5,
+      "initial_std": 0.05,
+      "mutation_rate": 0.05,
+      "mutation_sigma": 0.08,
+      "sensing_cost": 0.005
+    },
+    "resource": {
+      "decay": 0.002,
+      "diffusion": 0.1,
+      "initial_max": 1.5,
+      "initial_min": 0.5,
+      "source_rate": 0.01
+    },
+    "run": {
+      "checkpoint_interval": 60,
+      "metrics_interval": 20,
+      "steps": 73
+    },
+    "schema_version": 4,
+    "seed": 2026,
+    "terrain": {
+      "islands": 6,
+      "kind": "uniform",
+      "noise": 0.06,
+      "radius": 0.15,
+      "sea_level": 0.3
+    },
+    "world": {
+      "boundary": "periodic",
+      "height": 32,
+      "width": 48
+    }
+  },
+  "end_tick": 73,
+  "event_schema_version": 1,
+  "provenance": {
+    "backend": "numpy-cpu-float64",
+    "dependencies": {
+      "PyYAML": "6.0.3",
+      "numpy": "2.3.5"
+    },
+    "git_commit": "4d1f3686bdb68c78f01712d3c7f526aae61d1f50",
+    "git_dirty": false,
+    "machine": "AMD64",
+    "package_version": "0.1.0",
+    "platform": "Windows-10-10.0.19045-SP0",
+    "python": "3.12.7 (tags/v3.12.7:0b05ead, Oct  1 2024, 03:06:41) [MSC v.1941 64 bit (AMD64)]",
+    "rng": "PCG64/SeedSequence.spawn-v1",
+    "source_sha256": "1229e862f177c0130ebb702cb382b0abc67f609fb37fa5683e74fa5bd2532624"
+  },
+  "ruleset_version": "environment-v1+agents-v2+evolution-v1",
+  "start_tick": 0,
+  "state_digest": "d537cdb16da224f6d38f1bec7fce39654d7c0f6c3266c0f6d2607e411d429793",
+  "state_schema_version": 3,
+  "status": "completed"
+}
