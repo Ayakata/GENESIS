@@ -6,11 +6,16 @@ import numpy as np
 
 from genesis.agents.state import AgentLedger, AgentState
 from genesis.core.state import WorldState
+from genesis.evolution.genome import GENE_NAMES
+from genesis.evolution.state import EvolutionLedger
 from genesis.lab.metrics import measure
 
 
 def measure_sandbox(
-    world: WorldState, population: AgentState, ledger: AgentLedger
+    world: WorldState,
+    population: AgentState,
+    ledger: AgentLedger,
+    evolution: EvolutionLedger,
 ) -> dict[str, int | float]:
     result = measure(world)
     energy = float(population.energy[: population.count].sum(dtype=np.float64))
@@ -55,5 +60,18 @@ def measure_sandbox(
         agent_balance_error=energy - expected_agent,
         combined_energy_total=current_total,
         combined_balance_error=current_total - expected_total,
+        mutated_loci=evolution.mutated_loci,
+        clipped_loci=evolution.clipped_loci,
+        mutated_offspring=evolution.mutated_offspring,
     )
+    genomes = population.genome[: population.count]
+    if population.count:
+        means = genomes.mean(axis=0)
+        standard_deviations = genomes.std(axis=0)
+    else:
+        means = standard_deviations = np.zeros(len(GENE_NAMES), dtype=np.float64)
+    for index, name in enumerate(GENE_NAMES):
+        result[f"gene_{name}_mean"] = float(means[index])
+        result[f"gene_{name}_std"] = float(standard_deviations[index])
+    result["genetic_variance_mean"] = float(np.mean(standard_deviations**2))
     return result

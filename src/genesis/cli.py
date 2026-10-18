@@ -37,7 +37,8 @@ def run(config: Config, output: Path) -> dict[str, Any]:
         with (output / "metrics.jsonl").open("w", encoding="utf-8") as stream:
             stream.write(
                 json.dumps(
-                    measure_sandbox(sim.world, sim.agents, sim.agent_ledger), allow_nan=False
+                    measure_sandbox(sim.world, sim.agents, sim.agent_ledger, sim.evolution_ledger),
+                    allow_nan=False,
                 )
                 + "\n"
             )
@@ -49,17 +50,28 @@ def run(config: Config, output: Path) -> dict[str, Any]:
                 ):
                     stream.write(
                         json.dumps(
-                            measure_sandbox(sim.world, sim.agents, sim.agent_ledger),
+                            measure_sandbox(
+                                sim.world,
+                                sim.agents,
+                                sim.agent_ledger,
+                                sim.evolution_ledger,
+                            ),
                             allow_nan=False,
                         )
                         + "\n"
                     )
         write_sandbox_final_state(
-            output / "final_state.npz", sim.world, sim.agents, sim.agent_ledger
+            output / "final_state.npz",
+            sim.world,
+            sim.agents,
+            sim.agent_ledger,
+            sim.evolution_ledger,
         )
         summary: dict[str, Any] = {
             "state_digest": sim.digest(),
-            "metrics": measure_sandbox(sim.world, sim.agents, sim.agent_ledger),
+            "metrics": measure_sandbox(
+                sim.world, sim.agents, sim.agent_ledger, sim.evolution_ledger
+            ),
             "elapsed_seconds": perf_counter() - started,
         }
         write_json(output / "summary.json", summary)

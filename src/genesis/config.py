@@ -92,8 +92,8 @@ class AgentConfig:
     death_recycle_fraction: float = 0.5
 
     def __post_init__(self) -> None:
-        if not 0 <= self.initial_count <= self.max_population <= 1_000_000:
-            raise ConfigError("agents: require 0 <= initial_count <= max_population <= 1000000")
+        if not 0 <= self.initial_count <= self.max_population <= 250_000:
+            raise ConfigError("agents: require 0 <= initial_count <= max_population <= 250000")
         if not 1 <= self.max_age <= np.iinfo(np.uint32).max:
             raise ConfigError("agents.max_age must fit uint32 and be >= 1")
         nonnegative = (
@@ -124,6 +124,24 @@ class AgentConfig:
 
 
 @dataclass(frozen=True)
+class EvolutionConfig:
+    initial_mean: float = 0.5
+    initial_std: float = 0.05
+    mutation_rate: float = 0.05
+    mutation_sigma: float = 0.08
+    sensing_cost: float = 0.005
+    efficiency_cost: float = 0.01
+
+    def __post_init__(self) -> None:
+        unit_values = (self.initial_mean, self.initial_std, self.mutation_rate)
+        if any(not math.isfinite(value) or not 0 <= value <= 1 for value in unit_values):
+            raise ConfigError("evolution: initial_mean/std and mutation_rate must be in [0,1]")
+        costs = (self.mutation_sigma, self.sensing_cost, self.efficiency_cost)
+        if any(not math.isfinite(value) or value < 0 or value > 1e6 for value in costs):
+            raise ConfigError("evolution: mutation sigma and trait costs must be finite in [0,1e6]")
+
+
+@dataclass(frozen=True)
 class RunConfig:
     steps: int = 200
     metrics_interval: int = 10
@@ -142,6 +160,7 @@ class Config:
     conditions: ConditionsConfig = field(default_factory=ConditionsConfig)
     resource: ResourceConfig = field(default_factory=ResourceConfig)
     agents: AgentConfig = field(default_factory=AgentConfig)
+    evolution: EvolutionConfig = field(default_factory=EvolutionConfig)
     run: RunConfig = field(default_factory=RunConfig)
 
     def __post_init__(self) -> None:
@@ -154,6 +173,7 @@ class Config:
             *asdict(self.conditions).values(),
             *asdict(self.resource).values(),
             *asdict(self.agents).values(),
+            *asdict(self.evolution).values(),
         )
         if any(not math.isfinite(v) or abs(v) > 1e12 for v in values):
             raise ConfigError("numeric configuration must be finite with magnitude <= 1e12")

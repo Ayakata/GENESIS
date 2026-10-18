@@ -9,6 +9,8 @@ import numpy as np
 from genesis.agents.state import AgentLedger, AgentState
 from genesis.config import AgentConfig, Config
 from genesis.core.state import WorldState
+from genesis.evolution.genome import Gene, express, initialize_genomes, mutate
+from genesis.evolution.state import EvolutionLedger
 
 
 @dataclass(frozen=True)
@@ -22,24 +24,30 @@ class AgentFlux:
     death_loss: float
     births: int
     deaths: int
+    mutated_loci: int
+    clipped_loci: int
+    mutated_offspring: int
 
 
 def initialize_population(
-    world: WorldState, config: AgentConfig, rng: np.random.Generator
+    world: WorldState, config: Config, rng: np.random.Generator
 ) -> tuple[AgentState, AgentLedger]:
-    population = AgentState.empty(config.max_population)
-    if config.initial_count:
+    agents = config.agents
+    population = AgentState.empty(agents.max_population)
+    if agents.initial_count:
         land_y, land_x = np.nonzero(world.conditions.land)
         if not land_x.size:
             raise RuntimeError("Cannot place initial agents: world has no land")
-        selected = rng.integers(0, land_x.size, size=config.initial_count)
+        selected = rng.integers(0, land_x.size, size=agents.initial_count)
+        genomes = initialize_genomes(agents.initial_count, config=config.evolution, rng=rng)
         population.add(
             land_x[selected].astype(np.int32),
             land_y[selected].astype(np.int32),
-            np.full(config.initial_count, config.initial_energy, dtype=np.float64),
-            np.full(config.initial_count, -1, dtype=np.int64),
+            np.full(agents.initial_count, agents.initial_energy, dtype=np.float64),
+            np.full(agents.initial_count, -1, dtype=np.int64),
+            genomes,
         )
-    ledger = AgentLedger(initial_energy=config.initial_count * config.initial_energy)
+    ledger = AgentLedger(initial_energy=agents.initial_count * agents.initial_energy)
     population.assert_valid(world)
     ledger.assert_valid()
     return population, ledger
@@ -52,30 +60,61 @@ def _move(
     rng: np.random.Generator,
 ) -> float:
     count = population.count
-    if not count or config.agents.move_cost == 0 and world.resource.size == 1:
+    if not count:
         return 0.0
-    directions = rng.integers(0, 4, size=count)
-    dx = np.array([1, 0, -1, 0], dtype=np.int32)[directions]
-    dy = np.array([0, 1, 0, -1], dtype=np.int32)[directions]
+    traits = express(population.genome[:count])
+    random_directions = rng.integers(0, 4, size=count)
+    dx = np.array([1, 0, -1, 0], dtype=np.int32)
+    dy = np.array([0, 1, 0, -1], dtype=np.int32)
     old_x = population.x[:count]
     old_y = population.y[:count]
-    new_x = old_x + dx
-    new_y = old_y + dy
     height, width = world.resource.shape
+    candidate_x = old_x[:, None] + dx
+    candidate_y = old_y[:, None] + dy
     if config.world.boundary == "periodic":
-        new_x %= width
-        new_y %= height
-        valid = world.conditions.land[new_y, new_x]
+        candidate_x %= width
+        candidate_y %= height
+        valid = world.conditions.land[candidate_y, candidate_x]
     else:
-        inside = (new_x >= 0) & (new_x < width) & (new_y >= 0) & (new_y < height)
-        valid = np.zeros(count, dtype=np.bool_)
-        valid[inside] = world.conditions.land[new_y[inside], new_x[inside]]
-    can_pay = population.energy[:count] >= config.agents.move_cost
-    moved = valid & can_pay & ((new_x != old_x) | (new_y != old_y))
+        inside = (
+            (candidate_x >= 0) & (candidate_x < width) & (candidate_y >= 0) & (candidate_y < height)
+        )
+        safe_x = np.clip(candidate_x, 0, width - 1)
+        safe_y = np.clip(candidate_y, 0, height - 1)
+        valid = inside & world.conditions.land[safe_y, safe_x]
+        candidate_x, candidate_y = safe_x, safe_y
+
+    candidate_resource = np.where(valid, world.resource[candidate_y, candidate_x], -np.inf)
+    best_value = candidate_resource.max(axis=1)
+    tie_score = rng.random(candidate_resource.shape)
+    tie_score[(candidate_resource != best_value[:, None]) | ~valid] = -1.0
+    sensed_directions = tie_score.argmax(axis=1)
+    senses = rng.random(count) < traits.sensing
+    directions = np.where(senses, sensed_directions, random_directions)
+    row = np.arange(count)
+    new_x = candidate_x[row, directions]
+    new_y = candidate_y[row, directions]
+    destination_valid = valid[row, directions]
+    destination_resource = candidate_resource[row, directions]
+    current_resource = world.resource[old_y, old_x]
+
+    move_probability = (0.1 + 0.9 * traits.speed) * (0.25 + 0.75 * traits.exploration)
+    reproduction_reserve = config.agents.reproduction_threshold * traits.reproduction * traits.body
+    low_energy = population.energy[:count] < reproduction_reserve
+    move_probability *= np.where(low_energy, 1.0 - 0.75 * traits.caution, 1.0)
+    accepts_worse = (
+        (~senses)
+        | (destination_resource > current_resource)
+        | (rng.random(count) < traits.exploration)
+    )
+    attempts = (rng.random(count) < move_probability) & accepts_worse
+    costs = config.agents.move_cost * traits.body * (0.25 + traits.speed**2)
+    can_pay = population.energy[:count] >= costs
+    moved = destination_valid & attempts & can_pay & ((new_x != old_x) | (new_y != old_y))
     population.x[:count][moved] = new_x[moved]
     population.y[:count][moved] = new_y[moved]
-    loss = float(moved.sum()) * config.agents.move_cost
-    population.energy[:count][moved] -= config.agents.move_cost
+    loss = float(costs[moved].sum(dtype=np.float64))
+    population.energy[:count][moved] -= costs[moved]
     return loss
 
 
@@ -84,40 +123,63 @@ def _feed(world: WorldState, population: AgentState, config: AgentConfig) -> tup
     if not count or config.intake_rate == 0:
         return 0.0, 0.0
     height, width = world.resource.shape
+    traits = express(population.genome[:count])
     flat_cells = population.y[:count].astype(np.int64) * width + population.x[:count]
-    occupants = np.bincount(flat_cells, minlength=height * width)
+    demand = config.intake_rate * np.sqrt(traits.body) * traits.metabolism
+    cell_demand = np.bincount(flat_cells, weights=demand, minlength=height * width)
     flat_resource = world.resource.reshape(-1)
-    cell_consumed = np.minimum(flat_resource, occupants * config.intake_rate)
-    per_agent = cell_consumed[flat_cells] / occupants[flat_cells]
+    cell_consumed = np.minimum(flat_resource, cell_demand)
+    allocation = np.divide(
+        cell_consumed,
+        cell_demand,
+        out=np.zeros_like(cell_consumed),
+        where=cell_demand > 0,
+    )
+    per_agent = demand * allocation[flat_cells]
     flat_resource -= cell_consumed
-    population.energy[:count] += per_agent * config.assimilation_efficiency
+    efficiency = np.minimum(1.0, config.assimilation_efficiency * traits.efficiency)
+    assimilated_by_agent = per_agent * efficiency
+    population.energy[:count] += assimilated_by_agent
     consumed = float(cell_consumed.sum(dtype=np.float64))
-    assimilated = consumed * config.assimilation_efficiency
+    assimilated = float(assimilated_by_agent.sum(dtype=np.float64))
     world.transfer_out_total += consumed
     return consumed, assimilated
 
 
 def _reproduce(
-    population: AgentState, config: AgentConfig, rng: np.random.Generator
-) -> tuple[int, float]:
+    population: AgentState, config: Config, rng: np.random.Generator
+) -> tuple[int, float, int, int, int]:
     current = population.count
     slots = population.capacity - current
     if not current or slots <= 0:
-        return 0, 0.0
-    eligible = np.flatnonzero(population.energy[:current] >= config.reproduction_threshold)
+        return 0, 0.0, 0, 0, 0
+    traits = express(population.genome[:current])
+    offspring_energy = config.agents.offspring_energy * traits.body
+    reproduction_cost = config.agents.reproduction_cost * traits.body
+    threshold = config.agents.reproduction_threshold * traits.reproduction * traits.body
+    required = offspring_energy + reproduction_cost
+    eligible = np.flatnonzero(population.energy[:current] >= np.maximum(threshold, required))
     if eligible.size > slots:
         eligible = np.sort(rng.choice(eligible, size=slots, replace=False))
     births = int(eligible.size)
     if not births:
-        return 0, 0.0
-    population.energy[eligible] -= config.offspring_energy + config.reproduction_cost
+        return 0, 0.0, 0, 0, 0
+    inheritance = mutate(population.genome[eligible], config.evolution, rng)
+    population.energy[eligible] -= required[eligible]
     population.add(
         population.x[eligible].copy(),
         population.y[eligible].copy(),
-        np.full(births, config.offspring_energy, dtype=np.float64),
+        offspring_energy[eligible],
         population.ids[eligible].copy(),
+        inheritance.genomes,
     )
-    return births, births * config.reproduction_cost
+    return (
+        births,
+        float(reproduction_cost[eligible].sum(dtype=np.float64)),
+        inheritance.mutated_loci,
+        inheritance.clipped_loci,
+        inheritance.mutated_offspring,
+    )
 
 
 def _remove_dead(
@@ -149,18 +211,27 @@ def update_agents(
     world: WorldState,
     population: AgentState,
     ledger: AgentLedger,
+    evolution_ledger: EvolutionLedger,
     config: Config,
     rng: np.random.Generator,
 ) -> AgentFlux:
     """Advance agents once after the environment update for the same world tick."""
     count = population.count
     population.age[:count] += 1
-    basal = np.minimum(population.energy[:count], config.agents.basal_cost)
+    traits = express(population.genome[:count])
+    maintenance = (
+        config.agents.basal_cost * traits.body**0.75 * traits.metabolism
+        + config.evolution.sensing_cost * traits.sensing**2
+        + config.evolution.efficiency_cost * population.genome[:count, Gene.EFFICIENCY] ** 2
+    )
+    basal = np.minimum(population.energy[:count], maintenance)
     population.energy[:count] -= basal
     basal_loss = float(basal.sum(dtype=np.float64))
     movement_loss = _move(world, population, config, rng)
     consumed, assimilated = _feed(world, population, config.agents)
-    births, reproduction_loss = _reproduce(population, config.agents, rng)
+    births, reproduction_loss, mutated_loci, clipped_loci, mutated_offspring = _reproduce(
+        population, config, rng
+    )
     deaths, death_recycled, death_loss = _remove_dead(world, population, config.agents)
 
     ledger.consumed += consumed
@@ -173,6 +244,9 @@ def update_agents(
     ledger.death_loss += death_loss
     ledger.births += births
     ledger.deaths += deaths
+    evolution_ledger.mutated_loci += mutated_loci
+    evolution_ledger.clipped_loci += clipped_loci
+    evolution_ledger.mutated_offspring += mutated_offspring
     return AgentFlux(
         consumed=consumed,
         assimilated=assimilated,
@@ -183,4 +257,7 @@ def update_agents(
         death_loss=death_loss,
         births=births,
         deaths=deaths,
+        mutated_loci=mutated_loci,
+        clipped_loci=clipped_loci,
+        mutated_offspring=mutated_offspring,
     )

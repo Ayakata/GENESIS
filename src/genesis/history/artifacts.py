@@ -18,6 +18,8 @@ import genesis
 from genesis.agents.state import AgentLedger, AgentState
 from genesis.config import Config, dump_config
 from genesis.core.state import WorldState
+from genesis.evolution.genome import GENE_NAMES
+from genesis.evolution.state import EvolutionLedger
 
 
 def write_json(path: Path, value: Any) -> None:
@@ -109,7 +111,11 @@ def write_final_state(path: Path, state: WorldState) -> None:
 
 
 def write_sandbox_final_state(
-    path: Path, state: WorldState, population: AgentState, ledger: AgentLedger
+    path: Path,
+    state: WorldState,
+    population: AgentState,
+    ledger: AgentLedger,
+    evolution: EvolutionLedger,
 ) -> None:
     """Write an inspectable terminal artifact, not a resumable S01-6 checkpoint."""
     np.savez_compressed(
@@ -138,7 +144,11 @@ def write_sandbox_final_state(
         agent_y=population.y[: population.count],
         agent_energy=population.energy[: population.count],
         agent_age=population.age[: population.count],
+        agent_genome=population.genome[: population.count],
+        gene_names=np.array(GENE_NAMES),
         agent_next_id=np.array(population.next_id),
         agent_ledger_names=np.array(tuple(asdict(ledger))),
         agent_ledger_values=np.array(tuple(asdict(ledger).values()), dtype=np.float64),
+        evolution_ledger_names=np.array(tuple(asdict(evolution))),
+        evolution_ledger_values=np.array(tuple(asdict(evolution).values()), dtype=np.int64),
     )

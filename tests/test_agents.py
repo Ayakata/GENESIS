@@ -5,7 +5,14 @@ import pytest
 
 from genesis.agents.metrics import measure_sandbox
 from genesis.agents.simulation import SandboxSimulation
-from genesis.config import AgentConfig, Config, ResourceConfig, TerrainConfig, WorldConfig
+from genesis.config import (
+    AgentConfig,
+    Config,
+    EvolutionConfig,
+    ResourceConfig,
+    TerrainConfig,
+    WorldConfig,
+)
 
 
 def uniform_config(agents: AgentConfig, *, width: int = 1, height: int = 1) -> Config:
@@ -20,6 +27,14 @@ def uniform_config(agents: AgentConfig, *, width: int = 1, height: int = 1) -> C
             decay=0.0,
         ),
         agents=agents,
+        evolution=EvolutionConfig(
+            initial_mean=0.5,
+            initial_std=0.0,
+            mutation_rate=0.0,
+            mutation_sigma=0.0,
+            sensing_cost=0.0,
+            efficiency_cost=0.0,
+        ),
     )
 
 
@@ -65,7 +80,7 @@ def test_feeding_and_action_costs_have_analytic_ledger():
     assert flux.basal_loss == pytest.approx(0.5)
     assert sim.world.resource.item() == pytest.approx(9.0)
     assert sim.agents.energy[0] == pytest.approx(2.25)
-    metrics = measure_sandbox(sim.world, sim.agents, sim.agent_ledger)
+    metrics = measure_sandbox(sim.world, sim.agents, sim.agent_ledger, sim.evolution_ledger)
     assert metrics["balance_error"] == pytest.approx(0.0)
     assert metrics["agent_balance_error"] == pytest.approx(0.0)
     assert metrics["combined_balance_error"] == pytest.approx(0.0)
@@ -123,7 +138,7 @@ def test_reproduction_transfers_energy_and_records_cost_and_parentage():
     np.testing.assert_array_equal(sim.agents.parent_ids[:2], [-1, 0])
     np.testing.assert_allclose(sim.agents.energy[:2], [6.0, 3.0])
     assert sim.agent_ledger.reproduction_loss == 1.0
-    assert measure_sandbox(sim.world, sim.agents, sim.agent_ledger)[
+    assert measure_sandbox(sim.world, sim.agents, sim.agent_ledger, sim.evolution_ledger)[
         "combined_balance_error"
     ] == pytest.approx(0.0)
 
@@ -159,7 +174,7 @@ def test_age_death_recycles_configured_fraction_and_compacts():
     assert sim.world.resource.item() == pytest.approx(2.0)
     assert sim.agent_ledger.death_recycled == pytest.approx(2.0)
     assert sim.agent_ledger.death_loss == pytest.approx(6.0)
-    assert measure_sandbox(sim.world, sim.agents, sim.agent_ledger)[
+    assert measure_sandbox(sim.world, sim.agents, sim.agent_ledger, sim.evolution_ledger)[
         "combined_balance_error"
     ] == pytest.approx(0.0)
 
@@ -180,8 +195,11 @@ def test_movement_stays_on_land_and_charges_only_successful_moves():
     )
     config = replace(uniform_config(agents, width=5, height=4), world=WorldConfig(5, 4, "periodic"))
     sim = SandboxSimulation(config)
+    before_x, before_y = sim.agents.x[:100].copy(), sim.agents.y[:100].copy()
     sim.step()
-    assert sim.agent_ledger.movement_loss == pytest.approx(25.0)
+    moved = (sim.agents.x[:100] != before_x) | (sim.agents.y[:100] != before_y)
+    assert moved.any()
+    assert sim.agent_ledger.movement_loss == pytest.approx(0.125 * moved.sum())
     assert sim.world.conditions.land[sim.agents.y[:100], sim.agents.x[:100]].all()
 
 
@@ -198,9 +216,9 @@ def test_same_seed_same_agent_trajectory_and_chunking():
     b.advance(30)
     b.advance(45)
     assert a.digest() == b.digest()
-    assert measure_sandbox(a.world, a.agents, a.agent_ledger) == measure_sandbox(
-        b.world, b.agents, b.agent_ledger
-    )
+    assert measure_sandbox(
+        a.world, a.agents, a.agent_ledger, a.evolution_ledger
+    ) == measure_sandbox(b.world, b.agents, b.agent_ledger, b.evolution_ledger)
 
 
 @pytest.mark.parametrize("boundary", ["closed", "periodic"])
@@ -214,7 +232,7 @@ def test_long_run_agent_and_combined_energy_invariants(boundary, seed):
         )
     )
     sim.advance(250)
-    metrics = measure_sandbox(sim.world, sim.agents, sim.agent_ledger)
+    metrics = measure_sandbox(sim.world, sim.agents, sim.agent_ledger, sim.evolution_ledger)
     assert abs(metrics["balance_error"]) < 1e-9
     assert abs(metrics["agent_balance_error"]) < 1e-9
     assert abs(metrics["combined_balance_error"]) < 1e-9

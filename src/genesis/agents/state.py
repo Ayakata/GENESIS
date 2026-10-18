@@ -10,6 +10,7 @@ from numpy.typing import NDArray
 
 from genesis import AGENT_RULESET_VERSION, STATE_SCHEMA_VERSION
 from genesis.core.state import WorldState
+from genesis.evolution.genome import GENE_COUNT, GenomeArray
 
 Int64Array = NDArray[np.int64]
 Int32Array = NDArray[np.int32]
@@ -28,6 +29,7 @@ class AgentState:
     y: Int32Array
     energy: Float64Array
     age: UInt32Array
+    genome: GenomeArray
     count: int
     next_id: int
 
@@ -42,6 +44,7 @@ class AgentState:
             y=np.empty(capacity, dtype=np.int32),
             energy=np.empty(capacity, dtype=np.float64),
             age=np.empty(capacity, dtype=np.uint32),
+            genome=np.empty((capacity, GENE_COUNT), dtype=np.float64),
             count=0,
             next_id=0,
         )
@@ -56,10 +59,13 @@ class AgentState:
         y: Int32Array,
         energy: Float64Array,
         parent_ids: Int64Array,
+        genome: GenomeArray,
     ) -> None:
         size = int(x.size)
         if any(array.ndim != 1 or array.size != size for array in (y, energy, parent_ids)):
             raise ValueError("agent append arrays must be matching one-dimensional arrays")
+        if genome.shape != (size, GENE_COUNT):
+            raise ValueError(f"agent genomes must have shape [{size},{GENE_COUNT}]")
         if self.count + size > self.capacity:
             raise RuntimeError("agent population capacity exceeded")
         target = slice(self.count, self.count + size)
@@ -69,6 +75,7 @@ class AgentState:
         self.y[target] = y
         self.energy[target] = energy
         self.age[target] = 0
+        self.genome[target] = genome
         self.count += size
         self.next_id += size
 
@@ -76,7 +83,15 @@ class AgentState:
         if keep.shape != (self.count,):
             raise ValueError("keep mask must match active population")
         retained = int(keep.sum())
-        for array in (self.ids, self.parent_ids, self.x, self.y, self.energy, self.age):
+        for array in (
+            self.ids,
+            self.parent_ids,
+            self.x,
+            self.y,
+            self.energy,
+            self.age,
+            self.genome,
+        ):
             array[:retained] = array[: self.count][keep]
         self.count = retained
 
@@ -84,11 +99,16 @@ class AgentState:
         arrays = (self.ids, self.parent_ids, self.x, self.y, self.energy, self.age)
         if any(array.ndim != 1 or array.size != self.capacity for array in arrays):
             raise RuntimeError("Agent SoA capacity mismatch")
+        if self.genome.shape != (self.capacity, GENE_COUNT):
+            raise RuntimeError("Agent genome capacity mismatch")
         if not 0 <= self.count <= self.capacity or self.next_id < self.count:
             raise RuntimeError("Invalid agent counters")
         active = slice(0, self.count)
         if not np.isfinite(self.energy[active]).all() or (self.energy[active] < 0).any():
             raise RuntimeError("Invalid agent energy")
+        genomes = self.genome[: self.count]
+        if not np.isfinite(genomes).all() or (genomes < 0).any() or (genomes > 1).any():
+            raise RuntimeError("Agent gene outside [0,1]")
         height, width = world.resource.shape
         if (
             (self.x[active] < 0).any()
@@ -108,6 +128,8 @@ class AgentState:
             active = array[: self.count]
             h.update(active.dtype.str.encode())
             h.update(active.astype(active.dtype.newbyteorder("<")).tobytes(order="C"))
+        genome = self.genome[: self.count]
+        h.update(genome.astype("<f8").tobytes(order="C"))
         h.update(np.array([self.next_id], dtype="<i8").tobytes())
         return h.hexdigest()
 

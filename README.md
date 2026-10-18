@@ -2,17 +2,16 @@
 
 Лаборатория искусственной жизни. Долгосрочная цель — возникновение репликации,
 наследственности и организации из локальной цифровой химии.
-Первый спринт создаёт временный стенд готовых агентов. Сейчас реализованы среда и
-минимальные агенты S01-3; наследуемая вариативность появится в S01-4.
+Первый спринт создаёт временный стенд готовых агентов. Сейчас реализованы среда,
+минимальные агенты и восьмилокусная наследуемая вариативность S01-4.
 
 ## Запуск на Windows (PowerShell)
 
-Распакуйте `Genesis` в `H:\dev\Genesis`. Диск H: не доступен облачной среде Work,
-поэтому тестирование здесь проводится на Linux. Точный путь к вашему `python.exe`
-внутри `H:\DEVELOPMENT` неизвестен; укажите существующий интерпретатор Python 3.11+:
+Репозиторий находится в `H:\dev\GENESIS`, Python 3.12 — в `H:\DEVELOPMENT`,
+а Python 3.11 — в `H:\DEVELOPMENT\Python3.11`. Используйте отдельное окружение проекта:
 
 ```powershell
-Set-Location H:\dev\Genesis
+Set-Location H:\dev\GENESIS
 $GenesisPython = 'H:\DEVELOPMENT\python.exe' # замените, если python.exe вложен глубже
 & $GenesisPython --version
 & $GenesisPython -m venv .venv
@@ -21,7 +20,7 @@ $GenesisPython = 'H:\DEVELOPMENT\python.exe' # замените, если python
 & .\.venv\Scripts\python.exe -m genesis validate --config configs/archipelago.yaml
 & .\.venv\Scripts\python.exe -m pytest
 & .\.venv\Scripts\python.exe -m genesis run --config configs/archipelago.yaml --output runs/first
-& .\.venv\Scripts\python.exe experiments/s01_agents/reproduce.py --output runs/agents-check
+& .\.venv\Scripts\python.exe experiments/s01_evolution/reproduce.py --output runs/evolution-check
 ```
 
 Активация venv не требуется; политика выполнения PowerShell не мешает запуску.
@@ -62,9 +61,10 @@ python -m build --no-isolation
 Время выполнения и сведения о платформе намеренно исключены из digest.
 NPZ открывается с `numpy.load(..., allow_pickle=False)`.
 
-Это проверочный запуск среды и временных готовых агентов. Он не является доказательством
-эволюции или возникновения жизни. Возобновление, полные RNG-checkpoints, пакетный runner
-и эволюционные эксперименты ещё не реализованы (S01-4—S01-8).
+Это проверочный запуск среды и временных готовых агентов с наследуемыми признаками.
+Он подтверждает механику наследования, но не адаптацию или возникновение жизни.
+Возобновление, полные RNG-checkpoints, пакетный runner и проверка отбора ещё не
+реализованы (S01-5—S01-8).
 
 ## Документы
 
@@ -73,9 +73,11 @@ NPZ открывается с `numpy.load(..., allow_pickle=False)`.
 - `docs/ACCEPTANCE.md` — критерии приёмки и команды проверки.
 - `docs/decisions/0001-core.md` — решения и ограничения.
 - `docs/decisions/0002-agent-energy.md` — правила агентов и энергетический учёт.
+- `docs/decisions/0003-quantitative-genome.md` — геном, фенотип и компромиссы.
 - `docs/PROGRESS.md` — журнал проверенных достижений.
 - `experiments/s01_environment/` — сценарий и сохранённые доказательства.
 - `experiments/s01_agents/` — проверка детерминизма и энергетики агентов.
+- `experiments/s01_evolution/` — контроль наследования и мутационной вариативности.
 
 Если ZIP распакован без `.git`, восстановите историю из включённого `genesis.bundle`:
 `git clone genesis.bundle H:\dev\Genesis` (каталог назначения должен отсутствовать).

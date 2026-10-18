@@ -1,5 +1,5 @@
 # Control: transport alone must conserve the total; this is an open work item for agents later.
-schema_version: 2
+schema_version: 3
 seed: 42
 world:
   width: 32

@@ -44,6 +44,8 @@ def test_cli_end_to_end_separate_processes(tmp_path):
             assert state["tick"].item() == 11
             assert state["resource"].shape == (64, 96)
             assert "agent_ids" in state
+            assert state["agent_genome"].shape[1] == 8
+            assert state["gene_names"].size == 8
     assert summaries[0]["state_digest"] == summaries[1]["state_digest"]
     for name in ("metrics.jsonl", "config.resolved.yaml"):
         assert (tmp_path / "a" / name).read_bytes() == (tmp_path / "b" / name).read_bytes()

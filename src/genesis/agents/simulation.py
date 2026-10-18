@@ -11,6 +11,7 @@ from genesis.config import Config
 from genesis.core.simulation import Simulation as EnvironmentSimulation
 from genesis.core.state import WorldState
 from genesis.environment.resources import Flux
+from genesis.evolution.state import EvolutionLedger
 
 
 @dataclass(frozen=True)
@@ -24,8 +25,9 @@ class SandboxSimulation:
         self.config = config
         self.environment = EnvironmentSimulation(config)
         self.agents, self.agent_ledger = initialize_population(
-            self.environment.state, config.agents, self.environment.rng.agents
+            self.environment.state, config, self.environment.rng.agents
         )
+        self.evolution_ledger = EvolutionLedger()
 
     @property
     def world(self) -> WorldState:
@@ -37,12 +39,14 @@ class SandboxSimulation:
             self.world,
             self.agents,
             self.agent_ledger,
+            self.evolution_ledger,
             self.config,
             self.environment.rng.agents,
         )
         self.world.assert_valid()
         self.agents.assert_valid(self.world)
         self.agent_ledger.assert_valid()
+        self.evolution_ledger.assert_valid()
         return SandboxFlux(environment_flux, agent_flux)
 
     def advance(self, steps: int) -> None:
@@ -54,6 +58,12 @@ class SandboxSimulation:
     def digest(self) -> str:
         h = sha256(self.world.digest().encode())
         h.update(self.agents.digest().encode())
+        ledger_state = (
+            f"{self.evolution_ledger.mutated_loci}:"
+            f"{self.evolution_ledger.clipped_loci}:"
+            f"{self.evolution_ledger.mutated_offspring}"
+        )
+        h.update(ledger_state.encode())
         rng_state = self.environment.rng.agents.bit_generator.state
         h.update(json.dumps(rng_state, sort_keys=True, separators=(",", ":")).encode())
         return h.hexdigest()

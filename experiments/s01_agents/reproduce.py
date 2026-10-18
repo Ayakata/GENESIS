@@ -11,7 +11,14 @@ from dataclasses import replace
 from pathlib import Path
 from typing import Any
 
-from genesis.config import AgentConfig, Config, RunConfig, WorldConfig, dump_config
+from genesis.config import (
+    AgentConfig,
+    Config,
+    EvolutionConfig,
+    RunConfig,
+    WorldConfig,
+    dump_config,
+)
 
 
 def execute(root: Path, name: str, config: Config, hash_seed: str) -> dict[str, Any]:
@@ -51,6 +58,14 @@ def main() -> int:
     base = Config(
         world=WorldConfig(width=64, height=48),
         agents=AgentConfig(initial_count=128, max_population=4096, max_age=240),
+        evolution=EvolutionConfig(
+            initial_mean=0.5,
+            initial_std=0.0,
+            mutation_rate=0.0,
+            mutation_sigma=0.0,
+            sensing_cost=0.0,
+            efficiency_cost=0.0,
+        ),
         run=RunConfig(steps=300, metrics_interval=25),
     )
     results: dict[str, dict[str, Any]] = {}
@@ -91,7 +106,7 @@ def main() -> int:
         "total_deaths": sum(row["deaths"] for row in metric_rows),
         "limitations": [
             "The temporary agents are predefined mechanisms, not emergent life.",
-            "No genes or mutation are present before S01-4.",
+            "Genetic variation is explicitly disabled to preserve the S01-3 scenario.",
             "Terminal NPZ files are evidence artifacts, not resumable checkpoints.",
         ],
     }
