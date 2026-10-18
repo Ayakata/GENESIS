@@ -1,9 +1,11 @@
 """Genesis: mechanisms first, reproducible experiments, no predefined biological roles."""
 
 __version__ = "0.1.0"
-CONFIG_SCHEMA_VERSION = 3
+CONFIG_SCHEMA_VERSION = 4
 STATE_SCHEMA_VERSION = 3
-ARTIFACT_SCHEMA_VERSION = 3
+ARTIFACT_SCHEMA_VERSION = 4
+CHECKPOINT_SCHEMA_VERSION = 1
+EVENT_SCHEMA_VERSION = 1
 ENVIRONMENT_RULESET_VERSION = "environment-v1"
 AGENT_RULESET_VERSION = "agents-v2"
 EVOLUTION_RULESET_VERSION = "evolution-v1"

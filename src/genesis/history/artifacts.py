@@ -1,4 +1,4 @@
-"""Minimal evidence writer; deliberately not a resumable checkpoint implementation."""
+"""Versioned run manifests and inspectable terminal artifacts."""
 
 from __future__ import annotations
 
@@ -117,7 +117,7 @@ def write_sandbox_final_state(
     ledger: AgentLedger,
     evolution: EvolutionLedger,
 ) -> None:
-    """Write an inspectable terminal artifact, not a resumable S01-6 checkpoint."""
+    """Write a compact terminal inspection copy; resumable state lives in checkpoints."""
     np.savez_compressed(
         path,
         state_schema_version=np.array(genesis.STATE_SCHEMA_VERSION),

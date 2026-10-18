@@ -7,7 +7,9 @@ from dataclasses import dataclass
 from hashlib import sha256
 
 from genesis.agents.dynamics import AgentFlux, initialize_population, update_agents
+from genesis.agents.state import AgentLedger, AgentState
 from genesis.config import Config
+from genesis.core.rng import RandomStreams
 from genesis.core.simulation import Simulation as EnvironmentSimulation
 from genesis.core.state import WorldState
 from genesis.environment.resources import Flux
@@ -28,6 +30,29 @@ class SandboxSimulation:
             self.environment.state, config, self.environment.rng.agents
         )
         self.evolution_ledger = EvolutionLedger()
+
+    @classmethod
+    def restore(
+        cls,
+        config: Config,
+        world: WorldState,
+        agents: AgentState,
+        agent_ledger: AgentLedger,
+        evolution_ledger: EvolutionLedger,
+        rng: RandomStreams,
+    ) -> SandboxSimulation:
+        """Restore a complete sandbox without replaying initialization."""
+        instance = cls.__new__(cls)
+        instance.config = config
+        instance.environment = EnvironmentSimulation.restore(config, world, rng)
+        instance.agents = agents
+        instance.agent_ledger = agent_ledger
+        instance.evolution_ledger = evolution_ledger
+        world.assert_valid()
+        agents.assert_valid(world)
+        agent_ledger.assert_valid()
+        evolution_ledger.assert_valid()
+        return instance
 
     @property
     def world(self) -> WorldState:

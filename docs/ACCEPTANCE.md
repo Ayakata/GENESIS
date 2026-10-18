@@ -70,6 +70,24 @@
 - Производительность конечна и положительна, но машинозависимое число не используется
   как переносимый порог или часть научного состояния.
 
+## S01-6
+
+- Config schema v4 задаёт неотрицательный `checkpoint_interval`; финальный checkpoint
+  сохраняется всегда, периодические — на абсолютных тиках без дублирования финального.
+- Checkpoint без pickle содержит мир, активный SoA, все ledgers, `next_id`, resolved
+  config и точные состояния обоих PCG64-потоков.
+- JSON-sidecar и payload атомарно создаются без перезаписи; SHA-256, версии, ruleset,
+  dtype/shape, диапазоны, config digest и scientific digest проверяются до resume.
+- Повреждённый, неполный или несовместимый checkpoint отклоняется кодом CLI 2 и не
+  создаёт каталог результата.
+- `resume --steps N` исполняет N дополнительных тиков; scientific config менять нельзя,
+  а lineage родительского checkpoint сохраняется в manifest.
+- Непрерывный запуск и минимум три независимые схемы split/resume совпадают побитово
+  по итоговому NPZ, digest, метрикам, RNG-зависимой траектории и tick-events.
+- `events.jsonl` содержит версии, начало/конец/ошибку, каждый тик, snapshots, явные
+  потоки, рождения с parent id, смерти и мутации; журнал не влияет на механику.
+- Manifest различает успешный и частичный запуск и перечисляет все созданные snapshots.
+
 ## Команды
 
 ```bash
@@ -82,6 +100,7 @@ python experiments/s01_environment/reproduce.py --output runs/acceptance
 python experiments/s01_agents/reproduce.py --output runs/agents-acceptance
 python experiments/s01_evolution/reproduce.py --output runs/evolution-acceptance
 python experiments/s01_headless/reproduce.py --output runs/headless-acceptance
+python experiments/s01_history/reproduce.py --output runs/history-acceptance
 ```
 
 `experiments/s01_*/evidence/` и `docs/PROGRESS.md` содержат фактический

@@ -5,11 +5,12 @@ from __future__ import annotations
 import json
 import logging
 import statistics
-from dataclasses import asdict
+from dataclasses import asdict, replace
 from pathlib import Path
 from time import perf_counter
-from typing import Any
+from typing import Any, TextIO
 
+import genesis
 from genesis.agents.metrics import measure_sandbox
 from genesis.agents.simulation import SandboxSimulation
 from genesis.config import Config, dump_config
@@ -19,21 +20,57 @@ from genesis.history.artifacts import (
     write_json,
     write_sandbox_final_state,
 )
+from genesis.history.checkpoints import load_checkpoint, write_checkpoint
 
 LOG = logging.getLogger("genesis")
 BENCHMARK_SCHEMA_VERSION = 1
 
 
-def run_artifact(config: Config, output: Path) -> dict[str, Any]:
+def _event(stream: TextIO, value: dict[str, Any]) -> None:
+    stream.write(json.dumps(value, sort_keys=True, separators=(",", ":"), allow_nan=False) + "\n")
+
+
+def _checkpoint(
+    simulation: SandboxSimulation, output: Path, records: list[dict[str, Any]]
+) -> dict[str, Any]:
+    relative = Path("checkpoints") / f"tick-{simulation.world.tick:012d}.npz"
+    metadata = write_checkpoint(output / relative, simulation)
+    record = {
+        "tick": simulation.world.tick,
+        "path": relative.as_posix(),
+        "sidecar": relative.with_suffix(".json").as_posix(),
+        "file_sha256": metadata["file_sha256"],
+        "state_digest": metadata["state_digest"],
+    }
+    records.append(record)
+    return record
+
+
+def run_artifact(
+    config: Config,
+    output: Path,
+    *,
+    simulation: SandboxSimulation | None = None,
+    resumed_from: dict[str, Any] | None = None,
+) -> dict[str, Any]:
     """Run a simulation without a GUI and persist its inspectable artifacts."""
     manifest = start_run(output, config)
+    if resumed_from is not None:
+        manifest["resumed_from"] = resumed_from
+        write_json(output / "manifest.json", manifest)
     handler = logging.FileHandler(output / "run.log", encoding="utf-8")
     handler.setFormatter(logging.Formatter("%(levelname)s %(name)s: %(message)s"))
     file_log = logging.Logger("genesis.run", logging.INFO)
     file_log.addHandler(handler)
     started = perf_counter()
+    checkpoints: list[dict[str, Any]] = []
+    start_tick = 0
+    sim: SandboxSimulation | None = None
     try:
-        sim = SandboxSimulation(config)
+        sim = SandboxSimulation(config) if simulation is None else simulation
+        if sim.config != config:
+            raise ValueError("simulation config does not match artifact config")
+        start_tick = sim.world.tick
         LOG.info(
             "Started seed=%d shape=%s agents=%d steps=%d",
             config.seed,
@@ -48,21 +85,44 @@ def run_artifact(config: Config, output: Path) -> dict[str, Any]:
             sim.agents.count,
             config.run.steps,
         )
-        with (output / "metrics.jsonl").open("w", encoding="utf-8") as stream:
-            stream.write(
+        with (
+            (output / "metrics.jsonl").open("w", encoding="utf-8") as metrics_stream,
+            (output / "events.jsonl").open("w", encoding="utf-8") as event_stream,
+        ):
+            _event(
+                event_stream,
+                {
+                    "event_schema_version": genesis.EVENT_SCHEMA_VERSION,
+                    "type": "run_started",
+                    "tick": start_tick,
+                    "resumed": resumed_from is not None,
+                    "state_digest": sim.digest(),
+                },
+            )
+            metrics_stream.write(
                 json.dumps(
                     measure_sandbox(sim.world, sim.agents, sim.agent_ledger, sim.evolution_ledger),
                     allow_nan=False,
                 )
                 + "\n"
             )
-            for _ in range(config.run.steps):
-                sim.step()
+            for step_index in range(config.run.steps):
+                flux = sim.step()
+                _event(
+                    event_stream,
+                    {
+                        "event_schema_version": genesis.EVENT_SCHEMA_VERSION,
+                        "type": "tick",
+                        "tick": sim.world.tick,
+                        "environment": asdict(flux.environment),
+                        "agents": asdict(flux.agents),
+                    },
+                )
                 if (
                     sim.world.tick % config.run.metrics_interval == 0
-                    or sim.world.tick == config.run.steps
+                    or step_index + 1 == config.run.steps
                 ):
-                    stream.write(
+                    metrics_stream.write(
                         json.dumps(
                             measure_sandbox(
                                 sim.world,
@@ -74,6 +134,38 @@ def run_artifact(config: Config, output: Path) -> dict[str, Any]:
                         )
                         + "\n"
                     )
+                if (
+                    config.run.checkpoint_interval
+                    and sim.world.tick % config.run.checkpoint_interval == 0
+                ):
+                    checkpoint = _checkpoint(sim, output, checkpoints)
+                    _event(
+                        event_stream,
+                        {
+                            "event_schema_version": genesis.EVENT_SCHEMA_VERSION,
+                            "type": "checkpoint",
+                            **checkpoint,
+                        },
+                    )
+            if not checkpoints or checkpoints[-1]["tick"] != sim.world.tick:
+                checkpoint = _checkpoint(sim, output, checkpoints)
+                _event(
+                    event_stream,
+                    {
+                        "event_schema_version": genesis.EVENT_SCHEMA_VERSION,
+                        "type": "checkpoint",
+                        **checkpoint,
+                    },
+                )
+            _event(
+                event_stream,
+                {
+                    "event_schema_version": genesis.EVENT_SCHEMA_VERSION,
+                    "type": "run_completed",
+                    "tick": sim.world.tick,
+                    "state_digest": sim.digest(),
+                },
+            )
         write_sandbox_final_state(
             output / "final_state.npz",
             sim.world,
@@ -87,9 +179,20 @@ def run_artifact(config: Config, output: Path) -> dict[str, Any]:
                 sim.world, sim.agents, sim.agent_ledger, sim.evolution_ledger
             ),
             "elapsed_seconds": perf_counter() - started,
+            "start_tick": start_tick,
+            "end_tick": sim.world.tick,
+            "steps_executed": config.run.steps,
+            "checkpoint_count": len(checkpoints),
         }
         write_json(output / "summary.json", summary)
-        manifest.update(status="completed", state_digest=sim.digest())
+        manifest.update(
+            status="completed",
+            state_digest=sim.digest(),
+            start_tick=start_tick,
+            end_tick=sim.world.tick,
+            checkpoints=checkpoints,
+            event_schema_version=genesis.EVENT_SCHEMA_VERSION,
+        )
         write_json(output / "manifest.json", manifest)
         LOG.info(
             "Completed tick=%d balance_error=%.3g",
@@ -105,12 +208,65 @@ def run_artifact(config: Config, output: Path) -> dict[str, Any]:
     except BaseException as exc:
         LOG.exception("Run failed")
         file_log.exception("Run failed")
-        manifest.update(status="failed", error=f"{type(exc).__name__}: {exc}")
+        try:
+            with (output / "events.jsonl").open("a", encoding="utf-8") as event_stream:
+                _event(
+                    event_stream,
+                    {
+                        "event_schema_version": genesis.EVENT_SCHEMA_VERSION,
+                        "type": "run_failed",
+                        "tick": sim.world.tick if sim is not None else start_tick,
+                        "error": f"{type(exc).__name__}: {exc}",
+                    },
+                )
+        except OSError:
+            pass
+        manifest.update(
+            status="failed",
+            error=f"{type(exc).__name__}: {exc}",
+            start_tick=start_tick,
+            end_tick=sim.world.tick if sim is not None else start_tick,
+            checkpoints=checkpoints,
+            event_schema_version=genesis.EVENT_SCHEMA_VERSION,
+        )
         write_json(output / "manifest.json", manifest)
         raise
     finally:
         file_log.removeHandler(handler)
         handler.close()
+
+
+def resume_artifact(
+    checkpoint_path: Path,
+    output: Path,
+    *,
+    steps: int,
+    checkpoint_interval: int | None = None,
+) -> dict[str, Any]:
+    """Resume a checkpoint for an explicit number of additional steps."""
+    if type(steps) is not int or steps < 0:
+        raise ValueError("resume steps must be a nonnegative integer")
+    loaded = load_checkpoint(checkpoint_path)
+    interval = (
+        loaded.config.run.checkpoint_interval
+        if checkpoint_interval is None
+        else checkpoint_interval
+    )
+    run_config = replace(loaded.config.run, steps=steps, checkpoint_interval=interval)
+    config = replace(loaded.config, run=run_config)
+    simulation = loaded.simulation(config)
+    lineage = {
+        "checkpoint": str(loaded.path),
+        "tick": loaded.world.tick,
+        "state_digest": loaded.state_digest,
+        "file_sha256": loaded.file_sha256,
+    }
+    return run_artifact(
+        config,
+        output,
+        simulation=simulation,
+        resumed_from=lineage,
+    )
 
 
 def benchmark(config: Config, *, steps: int, warmup: int, repeats: int) -> dict[str, Any]:

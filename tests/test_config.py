@@ -7,6 +7,7 @@ from genesis.config import (
     Config,
     ConfigError,
     EvolutionConfig,
+    RunConfig,
     dump_config,
     parse_config,
 )
@@ -27,39 +28,42 @@ def test_complete_config_roundtrip():
         "seed: 1",
         "schema_version: 1",
         "schema_version: 2",
-        "schema_version: 4",
+        "schema_version: 3",
+        "schema_version: 5",
         "schema_version: true",
-        "schema_version: 3\nseed: -1",
-        "schema_version: 3\nseed: 18446744073709551616",
-        "schema_version: 3\nseed: 1.5",
-        "schema_version: 3\nseed: false",
-        "schema_version: 3\nunknown: 2",
-        "schema_version: 3\nworld: null",
-        "schema_version: 3\nworld: {width: 0}",
-        "schema_version: 3\nworld: {width: 1.5}",
-        "schema_version: 3\nworld: {width: 5000, height: 5000}",
-        "schema_version: 3\nworld: {boundary: invalid}",
-        "schema_version: 3\nworld: {widht: 10}",
-        "schema_version: 3\nterrain: {kind: plants}",
-        "schema_version: 3\nterrain: {islands: 0}",
-        "schema_version: 3\nterrain: {radius: 0}",
-        "schema_version: 3\nresource: {diffusion: 0.251}",
-        "schema_version: 3\nresource: {decay: -0.1}",
-        "schema_version: 3\nresource: {initial_min: 2, initial_max: 1}",
-        "schema_version: 3\nresource: {source_rate: .nan}",
-        "schema_version: 3\nresource: {source_rate: .inf}",
-        "schema_version: 3\nresource: {source_rate: true}",
-        "schema_version: 3\nconditions: {humidity_max: 1.1}",
-        "schema_version: 3\nconditions: {light_min: 0.9, light_max: 0.5}",
-        "schema_version: 3\nevolution: {mutation_rate: 1.1}",
-        "schema_version: 3\nevolution: {mutation_sgima: 0.1}",
-        "schema_version: 3\nrun: {steps: -1}",
-        "schema_version: 3\nrun: {metrics_interval: 0}",
-        "schema_version: 3\nseed: 1\nseed: 2",
-        "schema_version: 3\nworld: {width: 1, width: 2}",
-        "schema_version: 3\n1: value",
+        "schema_version: 4\nseed: -1",
+        "schema_version: 4\nseed: 18446744073709551616",
+        "schema_version: 4\nseed: 1.5",
+        "schema_version: 4\nseed: false",
+        "schema_version: 4\nunknown: 2",
+        "schema_version: 4\nworld: null",
+        "schema_version: 4\nworld: {width: 0}",
+        "schema_version: 4\nworld: {width: 1.5}",
+        "schema_version: 4\nworld: {width: 5000, height: 5000}",
+        "schema_version: 4\nworld: {boundary: invalid}",
+        "schema_version: 4\nworld: {widht: 10}",
+        "schema_version: 4\nterrain: {kind: plants}",
+        "schema_version: 4\nterrain: {islands: 0}",
+        "schema_version: 4\nterrain: {radius: 0}",
+        "schema_version: 4\nresource: {diffusion: 0.251}",
+        "schema_version: 4\nresource: {decay: -0.1}",
+        "schema_version: 4\nresource: {initial_min: 2, initial_max: 1}",
+        "schema_version: 4\nresource: {source_rate: .nan}",
+        "schema_version: 4\nresource: {source_rate: .inf}",
+        "schema_version: 4\nresource: {source_rate: true}",
+        "schema_version: 4\nconditions: {humidity_max: 1.1}",
+        "schema_version: 4\nconditions: {light_min: 0.9, light_max: 0.5}",
+        "schema_version: 4\nevolution: {mutation_rate: 1.1}",
+        "schema_version: 4\nevolution: {mutation_sgima: 0.1}",
+        "schema_version: 4\nrun: {steps: -1}",
+        "schema_version: 4\nrun: {metrics_interval: 0}",
+        "schema_version: 4\nrun: {checkpoint_interval: -1}",
+        "schema_version: 4\nrun: {checkpoint_interval: 1.5}",
+        "schema_version: 4\nseed: 1\nseed: 2",
+        "schema_version: 4\nworld: {width: 1, width: 2}",
+        "schema_version: 4\n1: value",
         "schema_version: [",
-        "schema_version: 3\nworld: !!python/object:builtins.object {}",
+        "schema_version: 4\nworld: !!python/object:builtins.object {}",
     ],
 )
 def test_invalid_configuration_is_rejected(text):
@@ -74,7 +78,7 @@ def test_large_config_rejected():
 
 def test_numeric_overflow_is_configuration_error():
     with pytest.raises(ConfigError):
-        parse_config("schema_version: 3\nresource: {source_rate: " + "9" * 1000 + "}")
+        parse_config("schema_version: 4\nresource: {source_rate: " + "9" * 1000 + "}")
 
 
 @pytest.mark.parametrize(
@@ -112,3 +116,17 @@ def test_invalid_agent_configuration_is_rejected(values):
 def test_invalid_evolution_configuration_is_rejected(values):
     with pytest.raises(ConfigError):
         EvolutionConfig(**values)
+
+
+@pytest.mark.parametrize(
+    "values",
+    [
+        {"steps": True},
+        {"metrics_interval": 1.5},
+        {"checkpoint_interval": True},
+        {"checkpoint_interval": -1},
+    ],
+)
+def test_invalid_run_configuration_is_rejected(values):
+    with pytest.raises(ConfigError):
+        RunConfig(**values)

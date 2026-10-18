@@ -134,6 +134,7 @@ def test_reproduction_transfers_energy_and_records_cost_and_parentage():
     sim = SandboxSimulation(uniform_config(agents))
     flux = sim.step().agents
     assert flux.births == 1
+    assert flux.born_ids == (1,) and flux.parent_ids == (0,)
     assert sim.agents.count == 2
     np.testing.assert_array_equal(sim.agents.parent_ids[:2], [-1, 0])
     np.testing.assert_allclose(sim.agents.energy[:2], [6.0, 3.0])
@@ -171,6 +172,7 @@ def test_age_death_recycles_configured_fraction_and_compacts():
     sim = SandboxSimulation(config)
     flux = sim.step().agents
     assert flux.deaths == 1 and sim.agents.count == 0
+    assert flux.dead_ids == (0,)
     assert sim.world.resource.item() == pytest.approx(2.0)
     assert sim.agent_ledger.death_recycled == pytest.approx(2.0)
     assert sim.agent_ledger.death_loss == pytest.approx(6.0)

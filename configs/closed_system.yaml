@@ -1,5 +1,5 @@
 # Control: transport alone must conserve the total; this is an open work item for agents later.
-schema_version: 3
+schema_version: 4
 seed: 42
 world:
   width: 32
@@ -14,3 +14,4 @@ resource:
 run:
   steps: 500
   metrics_interval: 25
+  checkpoint_interval: 0

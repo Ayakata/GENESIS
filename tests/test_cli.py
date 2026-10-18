@@ -107,6 +107,12 @@ def test_failed_run_is_marked_and_file_handler_closed(tmp_path, monkeypatch):
     manifest = json.loads((tmp_path / "failure" / "manifest.json").read_text())
     assert manifest["status"] == "failed"
     assert "injected failure" in manifest["error"]
+    events = [
+        json.loads(line)
+        for line in (tmp_path / "failure" / "events.jsonl").read_text().splitlines()
+    ]
+    assert events[-1]["type"] == "run_failed"
+    assert events[-1]["tick"] == 0
     assert tuple(LOG.handlers) == before
 
 
@@ -160,3 +166,48 @@ def test_cli_batch_rejects_invalid_scenario_spec(tmp_path):
         tmp_path / "batch",
     )
     assert result.returncode == 2
+
+
+def test_cli_resume_matches_uninterrupted_run(tmp_path):
+    config = tmp_path / "world.yaml"
+    assert invoke("init", "--output", config).returncode == 0
+    first = invoke(
+        "run",
+        "--config",
+        config,
+        "--steps",
+        3,
+        "--checkpoint-interval",
+        2,
+        "--output",
+        tmp_path / "first",
+    )
+    assert first.returncode == 0, first.stderr
+    checkpoint = tmp_path / "first" / "checkpoints" / "tick-000000000003.npz"
+    resumed = invoke(
+        "resume",
+        "--checkpoint",
+        checkpoint,
+        "--steps",
+        2,
+        "--output",
+        tmp_path / "resumed",
+    )
+    assert resumed.returncode == 0, resumed.stderr
+    continuous = invoke(
+        "run",
+        "--config",
+        config,
+        "--steps",
+        5,
+        "--output",
+        tmp_path / "continuous",
+    )
+    assert continuous.returncode == 0, continuous.stderr
+    resumed_summary = json.loads(resumed.stdout)
+    continuous_summary = json.loads(continuous.stdout)
+    assert resumed_summary["start_tick"] == 3
+    assert resumed_summary["end_tick"] == 5
+    assert resumed_summary["state_digest"] == continuous_summary["state_digest"]
+    assert resumed_summary["metrics"] == continuous_summary["metrics"]
+    assert (tmp_path / "resumed" / "events.jsonl").is_file()

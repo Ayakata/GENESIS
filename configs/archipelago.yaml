@@ -1,4 +1,4 @@
-schema_version: 3
+schema_version: 4
 seed: 42
 world:
   width: 96
@@ -47,3 +47,4 @@ evolution:
 run:
   steps: 200
   metrics_interval: 10
+  checkpoint_interval: 0

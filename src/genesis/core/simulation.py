@@ -1,5 +1,7 @@
 """A single simulation owns its configuration, RNG and state. No global random state."""
 
+from __future__ import annotations
+
 from genesis.config import Config
 from genesis.core.rng import RandomStreams
 from genesis.core.state import WorldState
@@ -12,6 +14,16 @@ class Simulation:
         self.config = config
         self.rng = RandomStreams.from_seed(config.seed)
         self.state: WorldState = generate(config, self.rng.environment)
+
+    @classmethod
+    def restore(cls, config: Config, state: WorldState, rng: RandomStreams) -> Simulation:
+        """Restore validated owned state without regenerating or consuming RNG."""
+        instance = cls.__new__(cls)
+        instance.config = config
+        instance.rng = rng
+        instance.state = state
+        state.assert_valid()
+        return instance
 
     def step(self) -> Flux:
         flux = update_resources(self.state, self.config)

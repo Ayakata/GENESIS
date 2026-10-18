@@ -145,10 +145,16 @@ class EvolutionConfig:
 class RunConfig:
     steps: int = 200
     metrics_interval: int = 10
+    checkpoint_interval: int = 0
 
     def __post_init__(self) -> None:
-        if self.steps < 0 or self.metrics_interval < 1:
-            raise ConfigError("run: steps >= 0 and metrics_interval >= 1 required")
+        values = (self.steps, self.metrics_interval, self.checkpoint_interval)
+        if any(type(value) is not int for value in values):
+            raise ConfigError("run controls must be integers")
+        if self.steps < 0 or self.metrics_interval < 1 or self.checkpoint_interval < 0:
+            raise ConfigError(
+                "run: steps >= 0, metrics_interval >= 1 and checkpoint_interval >= 0 required"
+            )
 
 
 @dataclass(frozen=True)

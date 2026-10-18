@@ -12,7 +12,7 @@ from typing import Any
 from genesis import __version__
 from genesis.config import Config, ConfigError, dump_config, load_config
 from genesis.lab.batch import BatchScenario, run_batch
-from genesis.lab.runner import benchmark_artifact, run_artifact
+from genesis.lab.runner import benchmark_artifact, resume_artifact, run_artifact
 
 LOG = logging.getLogger("genesis")
 
@@ -45,6 +45,12 @@ def main(argv: list[str] | None = None) -> int:
     execute.add_argument("--output", type=Path, required=True)
     execute.add_argument("--steps", type=int)
     execute.add_argument("--seed", type=int)
+    execute.add_argument("--checkpoint-interval", type=int)
+    resume = sub.add_parser("resume", help="continue from an integrity-checked checkpoint")
+    resume.add_argument("--checkpoint", type=Path, required=True)
+    resume.add_argument("--output", type=Path, required=True)
+    resume.add_argument("--steps", type=int, required=True)
+    resume.add_argument("--checkpoint-interval", type=int)
     batch = sub.add_parser("batch", help="run a scenario/seed matrix without a GUI")
     batch.add_argument("--scenario", action="append", type=_scenario, required=True)
     batch.add_argument("--seeds", nargs="+", type=int, required=True)
@@ -72,6 +78,11 @@ def main(argv: list[str] | None = None) -> int:
                     config = replace(config, seed=args.seed)
                 if args.steps is not None:
                     config = replace(config, run=replace(config.run, steps=args.steps))
+                if args.checkpoint_interval is not None:
+                    config = replace(
+                        config,
+                        run=replace(config.run, checkpoint_interval=args.checkpoint_interval),
+                    )
                 print(json.dumps(run(config, args.output), indent=2, allow_nan=False))
             else:
                 print(
@@ -87,7 +98,7 @@ def main(argv: list[str] | None = None) -> int:
                         allow_nan=False,
                     )
                 )
-        else:
+        elif args.command == "batch":
             scenarios = []
             for name, path in args.scenario:
                 config = load_config(path)
@@ -97,6 +108,19 @@ def main(argv: list[str] | None = None) -> int:
             print(
                 json.dumps(
                     run_batch(scenarios, args.seeds, args.output, jobs=args.jobs),
+                    indent=2,
+                    allow_nan=False,
+                )
+            )
+        else:
+            print(
+                json.dumps(
+                    resume_artifact(
+                        args.checkpoint,
+                        args.output,
+                        steps=args.steps,
+                        checkpoint_interval=args.checkpoint_interval,
+                    ),
                     indent=2,
                     allow_nan=False,
                 )

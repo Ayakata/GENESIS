@@ -27,6 +27,9 @@ class AgentFlux:
     mutated_loci: int
     clipped_loci: int
     mutated_offspring: int
+    born_ids: tuple[int, ...]
+    parent_ids: tuple[int, ...]
+    dead_ids: tuple[int, ...]
 
 
 def initialize_population(
@@ -148,11 +151,11 @@ def _feed(world: WorldState, population: AgentState, config: AgentConfig) -> tup
 
 def _reproduce(
     population: AgentState, config: Config, rng: np.random.Generator
-) -> tuple[int, float, int, int, int]:
+) -> tuple[int, float, int, int, int, tuple[int, ...], tuple[int, ...]]:
     current = population.count
     slots = population.capacity - current
     if not current or slots <= 0:
-        return 0, 0.0, 0, 0, 0
+        return 0, 0.0, 0, 0, 0, (), ()
     traits = express(population.genome[:current])
     offspring_energy = config.agents.offspring_energy * traits.body
     reproduction_cost = config.agents.reproduction_cost * traits.body
@@ -163,9 +166,11 @@ def _reproduce(
         eligible = np.sort(rng.choice(eligible, size=slots, replace=False))
     births = int(eligible.size)
     if not births:
-        return 0, 0.0, 0, 0, 0
+        return 0, 0.0, 0, 0, 0, (), ()
     inheritance = mutate(population.genome[eligible], config.evolution, rng)
     population.energy[eligible] -= required[eligible]
+    parent_ids = tuple(int(value) for value in population.ids[eligible])
+    first_child_id = population.next_id
     population.add(
         population.x[eligible].copy(),
         population.y[eligible].copy(),
@@ -179,19 +184,22 @@ def _reproduce(
         inheritance.mutated_loci,
         inheritance.clipped_loci,
         inheritance.mutated_offspring,
+        tuple(range(first_child_id, first_child_id + births)),
+        parent_ids,
     )
 
 
 def _remove_dead(
     world: WorldState, population: AgentState, config: AgentConfig
-) -> tuple[int, float, float]:
+) -> tuple[int, float, float, tuple[int, ...]]:
     count = population.count
     if not count:
-        return 0, 0.0, 0.0
+        return 0, 0.0, 0.0, ()
     dead = (population.energy[:count] <= 0) | (population.age[:count] >= config.max_age)
     deaths = int(dead.sum())
     if not deaths:
-        return 0, 0.0, 0.0
+        return 0, 0.0, 0.0, ()
+    dead_ids = tuple(int(value) for value in population.ids[:count][dead])
     remaining = population.energy[:count][dead]
     recycled = remaining * config.death_recycle_fraction
     lost = remaining - recycled
@@ -204,7 +212,7 @@ def _remove_dead(
     lost_total = float(lost.sum(dtype=np.float64))
     world.transfer_in_total += recycled_total
     population.compact(~dead)
-    return deaths, recycled_total, lost_total
+    return deaths, recycled_total, lost_total, dead_ids
 
 
 def update_agents(
@@ -229,10 +237,16 @@ def update_agents(
     basal_loss = float(basal.sum(dtype=np.float64))
     movement_loss = _move(world, population, config, rng)
     consumed, assimilated = _feed(world, population, config.agents)
-    births, reproduction_loss, mutated_loci, clipped_loci, mutated_offspring = _reproduce(
-        population, config, rng
-    )
-    deaths, death_recycled, death_loss = _remove_dead(world, population, config.agents)
+    (
+        births,
+        reproduction_loss,
+        mutated_loci,
+        clipped_loci,
+        mutated_offspring,
+        born_ids,
+        parent_ids,
+    ) = _reproduce(population, config, rng)
+    deaths, death_recycled, death_loss, dead_ids = _remove_dead(world, population, config.agents)
 
     ledger.consumed += consumed
     ledger.assimilated += assimilated
@@ -260,4 +274,7 @@ def update_agents(
         mutated_loci=mutated_loci,
         clipped_loci=clipped_loci,
         mutated_offspring=mutated_offspring,
+        born_ids=born_ids,
+        parent_ids=parent_ids,
+        dead_ids=dead_ids,
     )
