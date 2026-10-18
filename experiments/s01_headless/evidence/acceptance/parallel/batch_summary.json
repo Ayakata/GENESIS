@@ -1,11 +1,11 @@
 {
-  "aggregate_ticks_per_second": 567.0784050058222,
+  "aggregate_ticks_per_second": 589.9569176464253,
   "batch_schema_version": 1,
-  "elapsed_seconds": 1.269665699917823,
+  "elapsed_seconds": 1.2204280998557806,
   "jobs": 2,
   "results": [
     {
-      "elapsed_seconds": 0.11624620016664267,
+      "elapsed_seconds": 0.12234469968825579,
       "index": 0,
       "metrics": {
         "agent_age_mean": 96.19117647058823,
@@ -61,10 +61,10 @@
       "seed": 0,
       "state_digest": "7cda76c522228ede96a9968c376e6ecc78029e9379f5b7691cc89fc6d8e049b3",
       "steps": 120,
-      "ticks_per_second": 1032.291806768532
+      "ticks_per_second": 980.8352981843082
     },
     {
-      "elapsed_seconds": 0.12132309982553124,
+      "elapsed_seconds": 0.13175350008532405,
       "index": 1,
       "metrics": {
         "agent_age_mean": 96.63316582914572,
@@ -120,10 +120,10 @@
       "seed": 42,
       "state_digest": "6a5c377922b612cf8855dd5ed588fe8acf1acf08b79d7f124ee69823ce986da9",
       "steps": 120,
-      "ticks_per_second": 989.0944113080367
+      "ticks_per_second": 910.7917430830115
     },
     {
-      "elapsed_seconds": 0.10425269976258278,
+      "elapsed_seconds": 0.1117027997970581,
       "index": 2,
       "metrics": {
         "agent_age_mean": 96.21,
@@ -179,10 +179,10 @@
       "seed": 2026,
       "state_digest": "411d1b2d047a5fa46f656319fd8f6589bf733112db43b868880896f1ac640032",
       "steps": 120,
-      "ticks_per_second": 1151.0493279625268
+      "ticks_per_second": 1074.2792500995165
     },
     {
-      "elapsed_seconds": 0.11671790014952421,
+      "elapsed_seconds": 0.11791160004213452,
       "index": 3,
       "metrics": {
         "agent_age_mean": 98.95522388059702,
@@ -238,10 +238,10 @@
       "seed": 0,
       "state_digest": "805f29c9e9527f2786a7005b50b8b21457a75edafa499e182d020dd2f0cd7a47",
       "steps": 120,
-      "ticks_per_second": 1028.1199357276919
+      "ticks_per_second": 1017.7115733915849
     },
     {
-      "elapsed_seconds": 0.14288929989561439,
+      "elapsed_seconds": 0.11808270029723644,
       "index": 4,
       "metrics": {
         "agent_age_mean": 97.01960784313725,
@@ -297,10 +297,10 @@
       "seed": 42,
       "state_digest": "7669b8bf348d71e2a977f508675f9287ba03bcc3a17f81f018bc03a684c7a0cb",
       "steps": 120,
-      "ticks_per_second": 839.8109591667409
+      "ticks_per_second": 1016.2369229187456
     },
     {
-      "elapsed_seconds": 0.11977089988067746,
+      "elapsed_seconds": 0.1181457000784576,
       "index": 5,
       "metrics": {
         "agent_age_mean": 97.96954314720813,
@@ -356,7 +356,7 @@
       "seed": 2026,
       "state_digest": "139d046428ff0044c4a979596aeadb7691a0b5e97cb35c39a03c7ba0d73caa9f",
       "steps": 120,
-      "ticks_per_second": 1001.9128195542555
+      "ticks_per_second": 1015.695026736572
     }
   ],
   "task_count": 6,

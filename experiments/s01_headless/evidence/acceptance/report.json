@@ -1,8 +1,8 @@
 {
   "all_run_manifests_complete": true,
-  "benchmark_max_ticks_per_second": 1076.3445839648532,
-  "benchmark_median_ticks_per_second": 1052.801690496179,
-  "benchmark_min_ticks_per_second": 749.7508012728125,
+  "benchmark_max_ticks_per_second": 1192.8149622938045,
+  "benchmark_median_ticks_per_second": 1048.6181290525676,
+  "benchmark_min_ticks_per_second": 1031.6318994061166,
   "benchmark_repeats_same_digest": true,
   "limitations": [
     "Wall-clock throughput is machine-specific and is not part of scientific state.",
@@ -10,17 +10,17 @@
     "Each batch task currently writes full artifacts; resumable checkpoints remain S01-6."
   ],
   "max_abs_combined_balance_error": 2.7284841053187847e-12,
-  "parallel_aggregate_ticks_per_second": 567.0784050058222,
-  "parallel_elapsed_seconds": 1.269665699917823,
-  "parallel_speedup": 0.9684738274795333,
+  "parallel_aggregate_ticks_per_second": 589.9569176464253,
+  "parallel_elapsed_seconds": 1.2204280998557806,
+  "parallel_speedup": 1.0125361747799908,
   "scenario_count": 2,
   "seeds": [
     0,
     42,
     2026
   ],
-  "serial_aggregate_ticks_per_second": 585.5381827732523,
-  "serial_elapsed_seconds": 1.2296380000188947,
+  "serial_aggregate_ticks_per_second": 582.6526817914572,
+  "serial_elapsed_seconds": 1.2357275998219848,
   "serial_parallel_scientific_match": true,
   "stable_result_order": true,
   "tasks_per_batch": 6

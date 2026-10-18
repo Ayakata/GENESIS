@@ -3,28 +3,31 @@
 ## 2026-10-18 — S01-5 принят
 
 Единственный источник статуса — `GENESIS_ROADMAP.md`: **5/8** задач Sprint 01.
-Коммит реализации: `bdf9a4b89cbe085ad409c664312a5009ec762cbc`.
+Проверенный tip реализации: `c2c2997e18783c567d99944a395d833b9576401c`
+(основная реализация `bdf9a4b`, исправление worker-логов `c2c2997`).
 
 | Проверка | Результат | Доказательство |
 | --- | --- | --- |
-| pytest, CPython 3.11.9/Windows | 161 passed in 13.59s | s01_headless/evidence/verification/ |
-| pytest, CPython 3.12.7/Windows | 161 passed in 13.94s | s01_headless/evidence/verification/ |
+| pytest, CPython 3.11.9/Windows | 161 passed in 12.74s | s01_headless/evidence/verification/ |
+| pytest, CPython 3.12.7/Windows | 161 passed in 14.19s | s01_headless/evidence/verification/ |
 | Ruff lint/format, mypy strict | успешно | s01_headless/evidence/verification/ |
 | Сборка wheel + sdist | успешно | s01_headless/evidence/verification/ |
 | Serial/parallel: 2 сценария × 3 seeds | 6/6 digest и метрики совпали | acceptance/report.json |
 | Максимальный совокупный остаток | 2.7284841053187847e-12 | acceptance/report.json |
-| In-memory benchmark, 3 повтора | медиана 1052.802 тика/с | acceptance/benchmark/ |
+| In-memory benchmark, 3 повтора | медиана 1048.618 тика/с | acceptance/benchmark/ |
 | Регрессии S01-1—S01-4 | все сценарии прошли | verification/checks.json |
 
 Добавлены CLI `batch` и `benchmark`, безопасная валидация планов, стабильный порядок
 результатов, отдельные процессы `spawn`, batch/benchmark manifests и измерение ticks/s,
 cell updates/s и agent updates/s. Все 13 manifest одиночных запусков и benchmark
-фиксируют чистый implementation SHA; два batch manifest имеют статус `completed`.
+фиксируют чистый проверенный SHA; два batch manifest имеют статус `completed`, все
+12 журналов запусков непусты.
 
-На короткой контрольной матрице два процесса дали `0.968x` от последовательного режима:
-накладные расходы запуска и записи артефактов превысили выгоду. Это сохранённый
-отрицательный результат; корректность параллельного режима подтверждается совпадением
-научного состояния. Производительность машинозависима и не входит в digest.
+На короткой контрольной матрице два процесса дали `1.013x` от последовательного режима,
+то есть устойчивого ускорения практически нет: накладные расходы сопоставимы с выгодой.
+Это сохранённый отрицательный результат производительности; корректность параллельного
+режима подтверждается совпадением научного состояния. Скорость машинозависима и не
+входит в digest.
 
 Ограничения: каждая задача пока пишет полный итоговый набор; checkpoint/resume и журнал
 событий не реализованы. Следующее действие — S01-6, затем объединяющая проверка S01-7.

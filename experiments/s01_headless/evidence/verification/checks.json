@@ -1,8 +1,8 @@
 {
-  "implementation_commit": "bdf9a4b89cbe085ad409c664312a5009ec762cbc",
+  "implementation_commit": "c2c2997e18783c567d99944a395d833b9576401c",
   "pytest": {
-    "python_3_11_9_windows": "161 passed in 13.59s",
-    "python_3_12_7_windows": "161 passed in 13.94s"
+    "python_3_11_9_windows": "161 passed in 12.74s",
+    "python_3_12_7_windows": "161 passed in 14.19s"
   },
   "ruff_lint": "passed",
   "ruff_format": "passed",
@@ -24,8 +24,8 @@
     "serial_parallel_scientific_match": true,
     "stable_result_order": true,
     "max_abs_combined_balance_error": 2.7284841053187847e-12,
-    "benchmark_median_ticks_per_second": 1052.801690496179,
-    "parallel_speedup": 0.9684738274795333,
+    "benchmark_median_ticks_per_second": 1048.6181290525676,
+    "parallel_speedup": 1.0125361747799908,
     "clean_completed_run_and_benchmark_manifests": 13,
     "completed_batch_manifests": 2
   }
