@@ -1,0 +1,44 @@
+{
+  "benchmark_schema_version": 1,
+  "max_ticks_per_second": 1076.3445839648532,
+  "median_elapsed_seconds": 0.18996929982677102,
+  "median_ticks_per_second": 1052.801690496179,
+  "min_ticks_per_second": 749.7508012728125,
+  "repeats": 3,
+  "samples": [
+    {
+      "agent_updates": 38272,
+      "agent_updates_per_second": 201464.1314933488,
+      "cell_updates_per_second": 1617103.3966021307,
+      "elapsed_seconds": 0.18996929982677102,
+      "final_population": 204,
+      "repeat": 0,
+      "state_digest": "ea924aad701fa17eb56c7a224390d81c8769746de87718890e03b0c84bae242b",
+      "ticks_per_second": 1052.801690496179
+    },
+    {
+      "agent_updates": 38272,
+      "agent_updates_per_second": 205969.2995875143,
+      "cell_updates_per_second": 1653265.2809700144,
+      "elapsed_seconds": 0.1858140998519957,
+      "final_population": 204,
+      "repeat": 1,
+      "state_digest": "ea924aad701fa17eb56c7a224390d81c8769746de87718890e03b0c84bae242b",
+      "ticks_per_second": 1076.3445839648532
+    },
+    {
+      "agent_updates": 38272,
+      "agent_updates_per_second": 143472.31333156538,
+      "cell_updates_per_second": 1151617.23075504,
+      "elapsed_seconds": 0.26675530010834336,
+      "final_population": 204,
+      "repeat": 2,
+      "state_digest": "ea924aad701fa17eb56c7a224390d81c8769746de87718890e03b0c84bae242b",
+      "ticks_per_second": 749.7508012728125
+    }
+  ],
+  "seed": 42,
+  "state_digest": "ea924aad701fa17eb56c7a224390d81c8769746de87718890e03b0c84bae242b",
+  "steps": 200,
+  "warmup_steps": 20
+}

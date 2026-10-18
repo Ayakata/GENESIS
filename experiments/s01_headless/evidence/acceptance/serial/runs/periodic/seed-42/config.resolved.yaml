@@ -1,0 +1,49 @@
+schema_version: 3
+seed: 42
+world:
+  width: 48
+  height: 32
+  boundary: periodic
+terrain:
+  kind: uniform
+  islands: 6
+  radius: 0.15
+  sea_level: 0.3
+  noise: 0.06
+conditions:
+  equator_temperature: 25.0
+  polar_drop: 20.0
+  elevation_drop: 10.0
+  humidity_min: 0.2
+  humidity_max: 1.0
+  light_min: 0.3
+  light_max: 1.0
+resource:
+  initial_min: 0.5
+  initial_max: 1.5
+  source_rate: 0.01
+  diffusion: 0.1
+  decay: 0.002
+agents:
+  initial_count: 96
+  max_population: 2048
+  initial_energy: 5.0
+  basal_cost: 0.02
+  move_cost: 0.03
+  intake_rate: 0.4
+  assimilation_efficiency: 0.8
+  reproduction_threshold: 12.0
+  offspring_energy: 4.0
+  reproduction_cost: 0.2
+  max_age: 250
+  death_recycle_fraction: 0.5
+evolution:
+  initial_mean: 0.5
+  initial_std: 0.05
+  mutation_rate: 0.05
+  mutation_sigma: 0.08
+  sensing_cost: 0.005
+  efficiency_cost: 0.01
+run:
+  steps: 120
+  metrics_interval: 20

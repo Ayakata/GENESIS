@@ -1,0 +1,32 @@
+{
+  "implementation_commit": "bdf9a4b89cbe085ad409c664312a5009ec762cbc",
+  "pytest": {
+    "python_3_11_9_windows": "161 passed in 13.59s",
+    "python_3_12_7_windows": "161 passed in 13.94s"
+  },
+  "ruff_lint": "passed",
+  "ruff_format": "passed",
+  "mypy_strict": "passed, 28 source files",
+  "build": "wheel and sdist built successfully",
+  "s01_environment_regression": "passed, 13 process runs",
+  "s01_agents_regression": {
+    "process_runs": 12,
+    "deterministic_pairs": "6/6",
+    "max_abs_combined_balance_error": 4.160938260611147e-11
+  },
+  "s01_evolution_regression": {
+    "process_runs": 12,
+    "deterministic_pairs": "6/6",
+    "max_abs_combined_balance_error": 3.8198777474462986e-11
+  },
+  "s01_headless_acceptance": {
+    "tasks_per_batch": 6,
+    "serial_parallel_scientific_match": true,
+    "stable_result_order": true,
+    "max_abs_combined_balance_error": 2.7284841053187847e-12,
+    "benchmark_median_ticks_per_second": 1052.801690496179,
+    "parallel_speedup": 0.9684738274795333,
+    "clean_completed_run_and_benchmark_manifests": 13,
+    "completed_batch_manifests": 2
+  }
+}

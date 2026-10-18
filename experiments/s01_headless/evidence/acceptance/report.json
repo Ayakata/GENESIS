@@ -1,0 +1,27 @@
+{
+  "all_run_manifests_complete": true,
+  "benchmark_max_ticks_per_second": 1076.3445839648532,
+  "benchmark_median_ticks_per_second": 1052.801690496179,
+  "benchmark_min_ticks_per_second": 749.7508012728125,
+  "benchmark_repeats_same_digest": true,
+  "limitations": [
+    "Wall-clock throughput is machine-specific and is not part of scientific state.",
+    "Process parallelism is accepted for isolation and capacity; speedup is measured, not assumed.",
+    "Each batch task currently writes full artifacts; resumable checkpoints remain S01-6."
+  ],
+  "max_abs_combined_balance_error": 2.7284841053187847e-12,
+  "parallel_aggregate_ticks_per_second": 567.0784050058222,
+  "parallel_elapsed_seconds": 1.269665699917823,
+  "parallel_speedup": 0.9684738274795333,
+  "scenario_count": 2,
+  "seeds": [
+    0,
+    42,
+    2026
+  ],
+  "serial_aggregate_ticks_per_second": 585.5381827732523,
+  "serial_elapsed_seconds": 1.2296380000188947,
+  "serial_parallel_scientific_match": true,
+  "stable_result_order": true,
+  "tasks_per_batch": 6
+}

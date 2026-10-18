@@ -3,7 +3,7 @@
 Лаборатория искусственной жизни. Долгосрочная цель — возникновение репликации,
 наследственности и организации из локальной цифровой химии.
 Первый спринт создаёт временный стенд готовых агентов. Сейчас реализованы среда,
-минимальные агенты и восьмилокусная наследуемая вариативность S01-4.
+минимальные агенты, восьмилокусная наследуемая вариативность и headless batch S01-5.
 
 ## Запуск на Windows (PowerShell)
 
@@ -23,6 +23,7 @@ $GenesisPython = 'H:\DEVELOPMENT\python.exe' # замените, если python
 & .\.venv\Scripts\python.exe -m genesis batch --scenario archipelago=configs/archipelago.yaml --scenario closed=configs/closed_system.yaml --seeds 0 42 2026 --jobs 2 --output runs/batch
 & .\.venv\Scripts\python.exe -m genesis benchmark --config configs/archipelago.yaml --steps 500 --warmup 50 --repeats 3 --output runs/benchmark
 & .\.venv\Scripts\python.exe experiments/s01_evolution/reproduce.py --output runs/evolution-check
+& .\.venv\Scripts\python.exe experiments/s01_headless/reproduce.py --output runs/headless-check
 ```
 
 Активация venv не требуется; политика выполнения PowerShell не мешает запуску.

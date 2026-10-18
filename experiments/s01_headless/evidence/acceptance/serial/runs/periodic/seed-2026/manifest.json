@@ -1,0 +1,80 @@
+{
+  "artifact_schema_version": 3,
+  "config": {
+    "agents": {
+      "assimilation_efficiency": 0.8,
+      "basal_cost": 0.02,
+      "death_recycle_fraction": 0.5,
+      "initial_count": 96,
+      "initial_energy": 5.0,
+      "intake_rate": 0.4,
+      "max_age": 250,
+      "max_population": 2048,
+      "move_cost": 0.03,
+      "offspring_energy": 4.0,
+      "reproduction_cost": 0.2,
+      "reproduction_threshold": 12.0
+    },
+    "conditions": {
+      "elevation_drop": 10.0,
+      "equator_temperature": 25.0,
+      "humidity_max": 1.0,
+      "humidity_min": 0.2,
+      "light_max": 1.0,
+      "light_min": 0.3,
+      "polar_drop": 20.0
+    },
+    "evolution": {
+      "efficiency_cost": 0.01,
+      "initial_mean": 0.5,
+      "initial_std": 0.05,
+      "mutation_rate": 0.05,
+      "mutation_sigma": 0.08,
+      "sensing_cost": 0.005
+    },
+    "resource": {
+      "decay": 0.002,
+      "diffusion": 0.1,
+      "initial_max": 1.5,
+      "initial_min": 0.5,
+      "source_rate": 0.01
+    },
+    "run": {
+      "metrics_interval": 20,
+      "steps": 120
+    },
+    "schema_version": 3,
+    "seed": 2026,
+    "terrain": {
+      "islands": 6,
+      "kind": "uniform",
+      "noise": 0.06,
+      "radius": 0.15,
+      "sea_level": 0.3
+    },
+    "world": {
+      "boundary": "periodic",
+      "height": 32,
+      "width": 48
+    }
+  },
+  "provenance": {
+    "backend": "numpy-cpu-float64",
+    "dependencies": {
+      "PyYAML": "6.0.3",
+      "numpy": "2.3.5"
+    },
+    "git_commit": "bdf9a4b89cbe085ad409c664312a5009ec762cbc",
+    "git_dirty": false,
+    "machine": "AMD64",
+    "package_version": "0.1.0",
+    "platform": "Windows-10-10.0.19045-SP0",
+    "python": "3.12.7 (tags/v3.12.7:0b05ead, Oct  1 2024, 03:06:41) [MSC v.1941 64 bit (AMD64)]",
+    "rng": "PCG64/SeedSequence.spawn-v1",
+    "source_sha256": "07afbd6fa234f40ec33cbf0d6bcacf8675ef82a118162250a993ca5e3ce2c129"
+  },
+  "ruleset_version": "environment-v1+agents-v2+evolution-v1",
+  "state_digest": "139d046428ff0044c4a979596aeadb7691a0b5e97cb35c39a03c7ba0d73caa9f",
+  "state_schema_version": 3,
+  "status": "completed"
+}
