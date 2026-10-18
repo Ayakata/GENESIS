@@ -7,90 +7,26 @@ import json
 import logging
 from dataclasses import replace
 from pathlib import Path
-from time import perf_counter
 from typing import Any
 
 from genesis import __version__
-from genesis.agents.metrics import measure_sandbox
-from genesis.agents.simulation import SandboxSimulation
 from genesis.config import Config, ConfigError, dump_config, load_config
-from genesis.history.artifacts import start_run, write_json, write_sandbox_final_state
+from genesis.lab.batch import BatchScenario, run_batch
+from genesis.lab.runner import benchmark_artifact, run_artifact
 
 LOG = logging.getLogger("genesis")
 
 
 def run(config: Config, output: Path) -> dict[str, Any]:
-    manifest = start_run(output, config)
-    handler = logging.FileHandler(output / "run.log", encoding="utf-8")
-    handler.setFormatter(logging.Formatter("%(levelname)s %(name)s: %(message)s"))
-    LOG.addHandler(handler)
-    started = perf_counter()
-    try:
-        sim = SandboxSimulation(config)
-        LOG.info(
-            "Started seed=%d shape=%s agents=%d steps=%d",
-            config.seed,
-            sim.world.resource.shape,
-            sim.agents.count,
-            config.run.steps,
-        )
-        with (output / "metrics.jsonl").open("w", encoding="utf-8") as stream:
-            stream.write(
-                json.dumps(
-                    measure_sandbox(sim.world, sim.agents, sim.agent_ledger, sim.evolution_ledger),
-                    allow_nan=False,
-                )
-                + "\n"
-            )
-            for _ in range(config.run.steps):
-                sim.step()
-                if (
-                    sim.world.tick % config.run.metrics_interval == 0
-                    or sim.world.tick == config.run.steps
-                ):
-                    stream.write(
-                        json.dumps(
-                            measure_sandbox(
-                                sim.world,
-                                sim.agents,
-                                sim.agent_ledger,
-                                sim.evolution_ledger,
-                            ),
-                            allow_nan=False,
-                        )
-                        + "\n"
-                    )
-        write_sandbox_final_state(
-            output / "final_state.npz",
-            sim.world,
-            sim.agents,
-            sim.agent_ledger,
-            sim.evolution_ledger,
-        )
-        summary: dict[str, Any] = {
-            "state_digest": sim.digest(),
-            "metrics": measure_sandbox(
-                sim.world, sim.agents, sim.agent_ledger, sim.evolution_ledger
-            ),
-            "elapsed_seconds": perf_counter() - started,
-        }
-        write_json(output / "summary.json", summary)
-        manifest.update(status="completed", state_digest=sim.digest())
-        write_json(output / "manifest.json", manifest)
-        LOG.info(
-            "Completed tick=%d balance_error=%.3g",
-            sim.world.tick,
-            summary["metrics"]["balance_error"],
-        )
-        return summary
-    except BaseException as exc:
-        LOG.exception("Run failed")
-        manifest.update(status="failed", error=f"{type(exc).__name__}: {exc}")
-        write_json(output / "manifest.json", manifest)
-        raise
-    finally:
-        LOG.removeHandler(handler)
-        handler.close()
+    """Backward-compatible public entry point for one artifact-producing run."""
+    return run_artifact(config, output)
+
+
+def _scenario(value: str) -> tuple[str, Path]:
+    name, separator, raw_path = value.partition("=")
+    if not separator or not name or not raw_path:
+        raise argparse.ArgumentTypeError("scenario must have the form NAME=CONFIG_PATH")
+    return name, Path(raw_path)
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -109,23 +45,63 @@ def main(argv: list[str] | None = None) -> int:
     execute.add_argument("--output", type=Path, required=True)
     execute.add_argument("--steps", type=int)
     execute.add_argument("--seed", type=int)
+    batch = sub.add_parser("batch", help="run a scenario/seed matrix without a GUI")
+    batch.add_argument("--scenario", action="append", type=_scenario, required=True)
+    batch.add_argument("--seeds", nargs="+", type=int, required=True)
+    batch.add_argument("--output", type=Path, required=True)
+    batch.add_argument("--jobs", type=int, default=1)
+    batch.add_argument("--steps", type=int)
+    benchmark = sub.add_parser("benchmark", help="measure in-memory headless throughput")
+    benchmark.add_argument("--config", type=Path, required=True)
+    benchmark.add_argument("--output", type=Path, required=True)
+    benchmark.add_argument("--steps", type=int, default=200)
+    benchmark.add_argument("--warmup", type=int, default=20)
+    benchmark.add_argument("--repeats", type=int, default=3)
     args = parser.parse_args(argv)
     logging.basicConfig(level=args.log_level, format="%(levelname)s %(name)s: %(message)s")
     try:
         if args.command == "init":
             with args.output.open("x", encoding="utf-8") as stream:
                 stream.write(dump_config(Config()))
-        else:
+        elif args.command in ("validate", "run", "benchmark"):
             config = load_config(args.config)
             if args.command == "validate":
                 print(dump_config(config), end="")
-            else:
+            elif args.command == "run":
                 if args.seed is not None:
                     config = replace(config, seed=args.seed)
                 if args.steps is not None:
                     config = replace(config, run=replace(config.run, steps=args.steps))
                 print(json.dumps(run(config, args.output), indent=2, allow_nan=False))
-    except (ConfigError, OSError, RuntimeError) as exc:
+            else:
+                print(
+                    json.dumps(
+                        benchmark_artifact(
+                            config,
+                            args.output,
+                            steps=args.steps,
+                            warmup=args.warmup,
+                            repeats=args.repeats,
+                        ),
+                        indent=2,
+                        allow_nan=False,
+                    )
+                )
+        else:
+            scenarios = []
+            for name, path in args.scenario:
+                config = load_config(path)
+                if args.steps is not None:
+                    config = replace(config, run=replace(config.run, steps=args.steps))
+                scenarios.append(BatchScenario(name, config))
+            print(
+                json.dumps(
+                    run_batch(scenarios, args.seeds, args.output, jobs=args.jobs),
+                    indent=2,
+                    allow_nan=False,
+                )
+            )
+    except (ConfigError, OSError, RuntimeError, ValueError) as exc:
         LOG.error("%s", exc)
         return 2
     return 0

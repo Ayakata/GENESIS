@@ -108,3 +108,55 @@ def test_failed_run_is_marked_and_file_handler_closed(tmp_path, monkeypatch):
     assert manifest["status"] == "failed"
     assert "injected failure" in manifest["error"]
     assert tuple(LOG.handlers) == before
+
+
+def test_cli_batch_and_benchmark(tmp_path):
+    config = tmp_path / "world.yaml"
+    assert invoke("init", "--output", config).returncode == 0
+    batch = invoke(
+        "batch",
+        "--scenario",
+        f"world={config}",
+        "--seeds",
+        2,
+        3,
+        "--steps",
+        2,
+        "--jobs",
+        2,
+        "--output",
+        tmp_path / "batch",
+    )
+    assert batch.returncode == 0, batch.stderr
+    report = json.loads(batch.stdout)
+    assert report["task_count"] == 2
+    assert [item["seed"] for item in report["results"]] == [2, 3]
+
+    measured = invoke(
+        "benchmark",
+        "--config",
+        config,
+        "--steps",
+        2,
+        "--warmup",
+        0,
+        "--repeats",
+        2,
+        "--output",
+        tmp_path / "benchmark",
+    )
+    assert measured.returncode == 0, measured.stderr
+    assert json.loads(measured.stdout)["median_ticks_per_second"] > 0
+
+
+def test_cli_batch_rejects_invalid_scenario_spec(tmp_path):
+    result = invoke(
+        "batch",
+        "--scenario",
+        "missing-equals",
+        "--seeds",
+        1,
+        "--output",
+        tmp_path / "batch",
+    )
+    assert result.returncode == 2

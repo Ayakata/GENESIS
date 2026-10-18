@@ -54,6 +54,22 @@
   популяции не достигается, совокупный энергетический остаток остаётся <1e-8.
 - Результат не называется адаптацией: контрастные среды и отбор проверяются в S01-8.
 
+## S01-5
+
+- CLI принимает один или несколько именованных сценариев и список уникальных seeds.
+- Матрица `scenario × seed` имеет стабильный порядок и отдельный каталог для каждой задачи.
+- `jobs=1` и process-parallel `jobs>1` дают одинаковые digest и научные метрики.
+- Процессы используют `spawn`; конфиги и RNG не разделяются между независимыми мирами.
+- Небезопасные/повторные имена, повторные seeds, неверное число workers и слишком большой
+  план отклоняются до создания выходного каталога.
+- Существующие результаты не перезаписываются; batch manifest различает running/completed/failed.
+- Сохраняются полный resolved config и обычные артефакты каждого запуска, общий план,
+  результаты, версии/окружение и wall-clock производительность.
+- Отдельный in-memory benchmark имеет warm-up и повторы; все повторы дают один digest,
+  а отчёт содержит ticks/s, cell updates/s и agent updates/s.
+- Производительность конечна и положительна, но машинозависимое число не используется
+  как переносимый порог или часть научного состояния.
+
 ## Команды
 
 ```bash
@@ -65,6 +81,7 @@ python -m build --no-isolation
 python experiments/s01_environment/reproduce.py --output runs/acceptance
 python experiments/s01_agents/reproduce.py --output runs/agents-acceptance
 python experiments/s01_evolution/reproduce.py --output runs/evolution-acceptance
+python experiments/s01_headless/reproduce.py --output runs/headless-acceptance
 ```
 
 `experiments/s01_*/evidence/` и `docs/PROGRESS.md` содержат фактический
