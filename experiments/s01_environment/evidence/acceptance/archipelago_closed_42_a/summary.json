@@ -1,0 +1,14 @@
+{
+  "elapsed_seconds": 0.03311948200007464,
+  "metrics": {
+    "balance_error": -9.094947017729282e-13,
+    "land_cells": 1491,
+    "resource_max": 1.6640563698442852,
+    "resource_min": 0.0,
+    "resource_total": 1892.8833275080028,
+    "sink_total": 682.0843508802486,
+    "source_total": 1093.70311314492,
+    "tick": 200
+  },
+  "state_digest": "78ec45a516278965914ef760e037157799da30e166a462dcc5f8f320014565c7"
+}

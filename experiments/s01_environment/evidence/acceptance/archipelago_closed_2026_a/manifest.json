@@ -1,0 +1,58 @@
+{
+  "artifact_schema_version": 1,
+  "config": {
+    "conditions": {
+      "elevation_drop": 10.0,
+      "equator_temperature": 25.0,
+      "humidity_max": 1.0,
+      "humidity_min": 0.2,
+      "light_max": 1.0,
+      "light_min": 0.3,
+      "polar_drop": 20.0
+    },
+    "resource": {
+      "decay": 0.002,
+      "diffusion": 0.1,
+      "initial_max": 1.5,
+      "initial_min": 0.5,
+      "source_rate": 0.01
+    },
+    "run": {
+      "metrics_interval": 10,
+      "steps": 200
+    },
+    "schema_version": 1,
+    "seed": 2026,
+    "terrain": {
+      "islands": 6,
+      "kind": "archipelago",
+      "noise": 0.04,
+      "radius": 0.1,
+      "sea_level": 0.4
+    },
+    "world": {
+      "boundary": "closed",
+      "height": 64,
+      "width": 96
+    }
+  },
+  "provenance": {
+    "backend": "numpy-cpu-float64",
+    "dependencies": {
+      "PyYAML": "6.0.3",
+      "numpy": "2.3.5"
+    },
+    "git_commit": "c9860cafae543a7ac72932c72eb12fe00164715f",
+    "git_dirty": false,
+    "machine": "x86_64",
+    "package_version": "0.1.0",
+    "platform": "Linux-6.18.55-x86_64-with-glibc2.39",
+    "python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+    "rng": "PCG64/SeedSequence.spawn-v1",
+    "source_sha256": "c86005da38d349a83d9d02d88ebe594859c4223ac81d51a250739876483384e9"
+  },
+  "ruleset_version": "environment-v1",
+  "state_digest": "0e11a8208e20b172d326aa05d77d41465b51f45b90f5a92eba3f6d498ac6f0d4",
+  "state_schema_version": 1,
+  "status": "completed"
+}

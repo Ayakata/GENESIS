@@ -1,0 +1,137 @@
+{
+  "provenance": {
+    "backend": "numpy-cpu-float64",
+    "dependencies": {
+      "PyYAML": "6.0.3",
+      "numpy": "2.3.5"
+    },
+    "git_commit": "c9860cafae543a7ac72932c72eb12fe00164715f",
+    "git_dirty": false,
+    "machine": "x86_64",
+    "package_version": "0.1.0",
+    "platform": "Linux-6.18.55-x86_64-with-glibc2.39",
+    "python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+    "rng": "PCG64/SeedSequence.spawn-v1",
+    "source_sha256": "c86005da38d349a83d9d02d88ebe594859c4223ac81d51a250739876483384e9"
+  },
+  "results": [
+    {
+      "elapsed_seconds": 0.029879799999889656,
+      "metrics": {
+        "balance_error": 2.7284841053187847e-12,
+        "land_cells": 1368,
+        "resource_max": 1.6788230362318828,
+        "resource_min": 0.0,
+        "resource_total": 1820.9846446182842,
+        "sink_total": 643.7661150582165,
+        "source_total": 1106.449384121744,
+        "tick": 200
+      },
+      "repeat_equal": true,
+      "scenario": "archipelago_closed",
+      "seed": 0,
+      "state_digest": "69b7b09ffdebe8a6b0ab4854c3c82f50a6ecd34db68527c8d14dc3df381f2f30"
+    },
+    {
+      "elapsed_seconds": 0.03311948200007464,
+      "metrics": {
+        "balance_error": -9.094947017729282e-13,
+        "land_cells": 1491,
+        "resource_max": 1.6640563698442852,
+        "resource_min": 0.0,
+        "resource_total": 1892.8833275080028,
+        "sink_total": 682.0843508802486,
+        "source_total": 1093.70311314492,
+        "tick": 200
+      },
+      "repeat_equal": true,
+      "scenario": "archipelago_closed",
+      "seed": 42,
+      "state_digest": "78ec45a516278965914ef760e037157799da30e166a462dcc5f8f320014565c7"
+    },
+    {
+      "elapsed_seconds": 0.03053124600000956,
+      "metrics": {
+        "balance_error": 3.637978807091713e-12,
+        "land_cells": 2372,
+        "resource_max": 1.6809270650168517,
+        "resource_min": 0.0,
+        "resource_total": 2997.678829783473,
+        "sink_total": 1087.972251887054,
+        "source_total": 1697.9982475877587,
+        "tick": 200
+      },
+      "repeat_equal": true,
+      "scenario": "archipelago_closed",
+      "seed": 2026,
+      "state_digest": "0e11a8208e20b172d326aa05d77d41465b51f45b90f5a92eba3f6d498ac6f0d4"
+    },
+    {
+      "elapsed_seconds": 0.05659052500004691,
+      "metrics": {
+        "balance_error": -3.637978807091713e-12,
+        "land_cells": 1683,
+        "resource_max": 1.6788230362318826,
+        "resource_min": 0.0,
+        "resource_total": 2179.222072690789,
+        "sink_total": 779.3111003306374,
+        "source_total": 1285.190618612247,
+        "tick": 200
+      },
+      "repeat_equal": true,
+      "scenario": "archipelago_periodic",
+      "seed": 0,
+      "state_digest": "5948ce9783e36f0f564739ae03a5f194197a7d653a31a816054b33679fa65655"
+    },
+    {
+      "elapsed_seconds": 0.03981092999993052,
+      "metrics": {
+        "balance_error": 3.637978807091713e-12,
+        "land_cells": 1820,
+        "resource_max": 1.6628768984582476,
+        "resource_min": 0.0,
+        "resource_total": 2264.006216212263,
+        "sink_total": 821.250347613264,
+        "source_total": 1284.3610220287258,
+        "tick": 200
+      },
+      "repeat_equal": true,
+      "scenario": "archipelago_periodic",
+      "seed": 42,
+      "state_digest": "5ec0da41d91b2d0e264d41e8a9e586fe6485f8d520b71a573c0fc5e115a756b5"
+    },
+    {
+      "elapsed_seconds": 0.04282321200003025,
+      "metrics": {
+        "balance_error": 5.4569682106375694e-12,
+        "land_cells": 2611,
+        "resource_max": 1.6809387210198212,
+        "resource_min": 0.0,
+        "resource_total": 3252.782152006705,
+        "sink_total": 1187.804215031169,
+        "source_total": 1810.8036630477297,
+        "tick": 200
+      },
+      "repeat_equal": true,
+      "scenario": "archipelago_periodic",
+      "seed": 2026,
+      "state_digest": "92ed7f686696d8e75f832c8b49e482a53a6817030c82b635119e00a088e77ef0"
+    },
+    {
+      "elapsed_seconds": 0.038805941999953575,
+      "metrics": {
+        "balance_error": 0.0,
+        "land_cells": 768,
+        "resource_max": 0.9886425173226842,
+        "resource_min": 0.9796841601736725,
+        "resource_total": 755.7667455611754,
+        "sink_total": 0.0,
+        "source_total": 0.0,
+        "tick": 500
+      },
+      "scenario": "closed_control",
+      "seed": 42,
+      "state_digest": "ee9cd76be8d299df92fd665e00f3b3719caaf602d9d3062be315ea6c6ad6e489"
+    }
+  ]
+}

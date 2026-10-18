@@ -1,0 +1,29 @@
+schema_version: 1
+seed: 42
+world:
+  width: 32
+  height: 24
+  boundary: closed
+terrain:
+  kind: uniform
+  islands: 6
+  radius: 0.15
+  sea_level: 0.3
+  noise: 0.06
+conditions:
+  equator_temperature: 25.0
+  polar_drop: 20.0
+  elevation_drop: 10.0
+  humidity_min: 0.2
+  humidity_max: 1.0
+  light_min: 0.3
+  light_max: 1.0
+resource:
+  initial_min: 0.5
+  initial_max: 1.5
+  source_rate: 0.0
+  diffusion: 0.25
+  decay: 0.0
+run:
+  steps: 500
+  metrics_interval: 25

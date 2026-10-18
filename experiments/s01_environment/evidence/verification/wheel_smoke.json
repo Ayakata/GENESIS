@@ -1,0 +1,19 @@
+{
+  "package_path": "/workspace/scratch/095cb6e2bf9c/Genesis/src/genesis/__init__.py",
+  "provenance": {
+    "package_version": "0.1.0",
+    "git_commit": "c9860cafae543a7ac72932c72eb12fe00164715f",
+    "git_dirty": false,
+    "source_sha256": "c86005da38d349a83d9d02d88ebe594859c4223ac81d51a250739876483384e9",
+    "python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+    "platform": "Linux-6.18.55-x86_64-with-glibc2.39",
+    "machine": "x86_64",
+    "dependencies": {
+      "numpy": "2.3.5",
+      "PyYAML": "6.0.3"
+    },
+    "backend": "numpy-cpu-float64",
+    "rng": "PCG64/SeedSequence.spawn-v1"
+  },
+  "source_and_wheel_equal": true
+}

@@ -1,0 +1,29 @@
+schema_version: 1
+seed: 42
+world:
+  width: 96
+  height: 64
+  boundary: periodic
+terrain:
+  kind: archipelago
+  islands: 6
+  radius: 0.1
+  sea_level: 0.4
+  noise: 0.04
+conditions:
+  equator_temperature: 25.0
+  polar_drop: 20.0
+  elevation_drop: 10.0
+  humidity_min: 0.2
+  humidity_max: 1.0
+  light_min: 0.3
+  light_max: 1.0
+resource:
+  initial_min: 0.5
+  initial_max: 1.5
+  source_rate: 0.01
+  diffusion: 0.1
+  decay: 0.002
+run:
+  steps: 200
+  metrics_interval: 10

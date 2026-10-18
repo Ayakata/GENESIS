@@ -1,0 +1,27 @@
+[
+  {
+    "check": "pytest",
+    "command": "python -m pytest -q",
+    "returncode": 0
+  },
+  {
+    "check": "ruff",
+    "command": "python -m ruff check .",
+    "returncode": 0
+  },
+  {
+    "check": "format",
+    "command": "python -m ruff format --check .",
+    "returncode": 0
+  },
+  {
+    "check": "mypy",
+    "command": "python -m mypy",
+    "returncode": 0
+  },
+  {
+    "check": "build",
+    "command": "python -m build --no-isolation",
+    "returncode": 0
+  }
+]

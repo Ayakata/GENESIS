@@ -1,0 +1,234 @@
+running egg_info
+writing src/genesis_alife.egg-info/PKG-INFO
+writing dependency_links to src/genesis_alife.egg-info/dependency_links.txt
+writing entry points to src/genesis_alife.egg-info/entry_points.txt
+writing requirements to src/genesis_alife.egg-info/requires.txt
+writing top-level names to src/genesis_alife.egg-info/top_level.txt
+reading manifest file 'src/genesis_alife.egg-info/SOURCES.txt'
+reading manifest template 'MANIFEST.in'
+writing manifest file 'src/genesis_alife.egg-info/SOURCES.txt'
+running sdist
+running egg_info
+writing src/genesis_alife.egg-info/PKG-INFO
+writing dependency_links to src/genesis_alife.egg-info/dependency_links.txt
+writing entry points to src/genesis_alife.egg-info/entry_points.txt
+writing requirements to src/genesis_alife.egg-info/requires.txt
+writing top-level names to src/genesis_alife.egg-info/top_level.txt
+reading manifest file 'src/genesis_alife.egg-info/SOURCES.txt'
+reading manifest template 'MANIFEST.in'
+writing manifest file 'src/genesis_alife.egg-info/SOURCES.txt'
+running check
+creating genesis_alife-0.1.0
+creating genesis_alife-0.1.0/configs
+creating genesis_alife-0.1.0/docs
+creating genesis_alife-0.1.0/docs/decisions
+creating genesis_alife-0.1.0/experiments/s01_environment
+creating genesis_alife-0.1.0/src/genesis
+creating genesis_alife-0.1.0/src/genesis/agents
+creating genesis_alife-0.1.0/src/genesis/chemistry
+creating genesis_alife-0.1.0/src/genesis/core
+creating genesis_alife-0.1.0/src/genesis/environment
+creating genesis_alife-0.1.0/src/genesis/evolution
+creating genesis_alife-0.1.0/src/genesis/history
+creating genesis_alife-0.1.0/src/genesis/lab
+creating genesis_alife-0.1.0/src/genesis/viewer
+creating genesis_alife-0.1.0/src/genesis_alife.egg-info
+creating genesis_alife-0.1.0/tests
+copying files to genesis_alife-0.1.0...
+copying GENESIS_ROADMAP.md -> genesis_alife-0.1.0
+copying MANIFEST.in -> genesis_alife-0.1.0
+copying README.md -> genesis_alife-0.1.0
+copying pyproject.toml -> genesis_alife-0.1.0
+copying requirements-dev.lock.txt -> genesis_alife-0.1.0
+copying requirements.lock.txt -> genesis_alife-0.1.0
+copying configs/archipelago.yaml -> genesis_alife-0.1.0/configs
+copying configs/closed_system.yaml -> genesis_alife-0.1.0/configs
+copying docs/ACCEPTANCE.md -> genesis_alife-0.1.0/docs
+copying docs/ARCHITECTURE.md -> genesis_alife-0.1.0/docs
+copying docs/decisions/0001-core.md -> genesis_alife-0.1.0/docs/decisions
+copying experiments/s01_environment/reproduce.py -> genesis_alife-0.1.0/experiments/s01_environment
+copying src/genesis/__init__.py -> genesis_alife-0.1.0/src/genesis
+copying src/genesis/__main__.py -> genesis_alife-0.1.0/src/genesis
+copying src/genesis/cli.py -> genesis_alife-0.1.0/src/genesis
+copying src/genesis/config.py -> genesis_alife-0.1.0/src/genesis
+copying src/genesis/py.typed -> genesis_alife-0.1.0/src/genesis
+copying src/genesis/agents/__init__.py -> genesis_alife-0.1.0/src/genesis/agents
+copying src/genesis/chemistry/__init__.py -> genesis_alife-0.1.0/src/genesis/chemistry
+copying src/genesis/core/__init__.py -> genesis_alife-0.1.0/src/genesis/core
+copying src/genesis/core/rng.py -> genesis_alife-0.1.0/src/genesis/core
+copying src/genesis/core/simulation.py -> genesis_alife-0.1.0/src/genesis/core
+copying src/genesis/core/state.py -> genesis_alife-0.1.0/src/genesis/core
+copying src/genesis/core/topology.py -> genesis_alife-0.1.0/src/genesis/core
+copying src/genesis/environment/__init__.py -> genesis_alife-0.1.0/src/genesis/environment
+copying src/genesis/environment/generation.py -> genesis_alife-0.1.0/src/genesis/environment
+copying src/genesis/environment/resources.py -> genesis_alife-0.1.0/src/genesis/environment
+copying src/genesis/evolution/__init__.py -> genesis_alife-0.1.0/src/genesis/evolution
+copying src/genesis/history/__init__.py -> genesis_alife-0.1.0/src/genesis/history
+copying src/genesis/history/artifacts.py -> genesis_alife-0.1.0/src/genesis/history
+copying src/genesis/lab/__init__.py -> genesis_alife-0.1.0/src/genesis/lab
+copying src/genesis/lab/metrics.py -> genesis_alife-0.1.0/src/genesis/lab
+copying src/genesis/viewer/__init__.py -> genesis_alife-0.1.0/src/genesis/viewer
+copying src/genesis_alife.egg-info/PKG-INFO -> genesis_alife-0.1.0/src/genesis_alife.egg-info
+copying src/genesis_alife.egg-info/SOURCES.txt -> genesis_alife-0.1.0/src/genesis_alife.egg-info
+copying src/genesis_alife.egg-info/dependency_links.txt -> genesis_alife-0.1.0/src/genesis_alife.egg-info
+copying src/genesis_alife.egg-info/entry_points.txt -> genesis_alife-0.1.0/src/genesis_alife.egg-info
+copying src/genesis_alife.egg-info/requires.txt -> genesis_alife-0.1.0/src/genesis_alife.egg-info
+copying src/genesis_alife.egg-info/top_level.txt -> genesis_alife-0.1.0/src/genesis_alife.egg-info
+copying tests/test_cli.py -> genesis_alife-0.1.0/tests
+copying tests/test_config.py -> genesis_alife-0.1.0/tests
+copying tests/test_simulation.py -> genesis_alife-0.1.0/tests
+copying tests/test_topology.py -> genesis_alife-0.1.0/tests
+Writing genesis_alife-0.1.0/setup.cfg
+Creating tar archive
+removing 'genesis_alife-0.1.0' (and everything under it)
+running egg_info
+writing src/genesis_alife.egg-info/PKG-INFO
+writing dependency_links to src/genesis_alife.egg-info/dependency_links.txt
+writing entry points to src/genesis_alife.egg-info/entry_points.txt
+writing requirements to src/genesis_alife.egg-info/requires.txt
+writing top-level names to src/genesis_alife.egg-info/top_level.txt
+reading manifest file 'src/genesis_alife.egg-info/SOURCES.txt'
+reading manifest template 'MANIFEST.in'
+writing manifest file 'src/genesis_alife.egg-info/SOURCES.txt'
+running bdist_wheel
+running build
+running build_py
+creating build/lib/genesis
+copying src/genesis/config.py -> build/lib/genesis
+copying src/genesis/cli.py -> build/lib/genesis
+copying src/genesis/__main__.py -> build/lib/genesis
+copying src/genesis/__init__.py -> build/lib/genesis
+creating build/lib/genesis/environment
+copying src/genesis/environment/generation.py -> build/lib/genesis/environment
+copying src/genesis/environment/resources.py -> build/lib/genesis/environment
+copying src/genesis/environment/__init__.py -> build/lib/genesis/environment
+creating build/lib/genesis/lab
+copying src/genesis/lab/metrics.py -> build/lib/genesis/lab
+copying src/genesis/lab/__init__.py -> build/lib/genesis/lab
+creating build/lib/genesis/agents
+copying src/genesis/agents/__init__.py -> build/lib/genesis/agents
+creating build/lib/genesis/chemistry
+copying src/genesis/chemistry/__init__.py -> build/lib/genesis/chemistry
+creating build/lib/genesis/viewer
+copying src/genesis/viewer/__init__.py -> build/lib/genesis/viewer
+creating build/lib/genesis/history
+copying src/genesis/history/artifacts.py -> build/lib/genesis/history
+copying src/genesis/history/__init__.py -> build/lib/genesis/history
+creating build/lib/genesis/evolution
+copying src/genesis/evolution/__init__.py -> build/lib/genesis/evolution
+creating build/lib/genesis/core
+copying src/genesis/core/topology.py -> build/lib/genesis/core
+copying src/genesis/core/simulation.py -> build/lib/genesis/core
+copying src/genesis/core/state.py -> build/lib/genesis/core
+copying src/genesis/core/rng.py -> build/lib/genesis/core
+copying src/genesis/core/__init__.py -> build/lib/genesis/core
+running egg_info
+writing src/genesis_alife.egg-info/PKG-INFO
+writing dependency_links to src/genesis_alife.egg-info/dependency_links.txt
+writing entry points to src/genesis_alife.egg-info/entry_points.txt
+writing requirements to src/genesis_alife.egg-info/requires.txt
+writing top-level names to src/genesis_alife.egg-info/top_level.txt
+reading manifest file 'src/genesis_alife.egg-info/SOURCES.txt'
+reading manifest template 'MANIFEST.in'
+writing manifest file 'src/genesis_alife.egg-info/SOURCES.txt'
+copying src/genesis/py.typed -> build/lib/genesis
+installing to build/bdist.linux-x86_64/wheel
+running install
+running install_lib
+creating build/bdist.linux-x86_64/wheel
+creating build/bdist.linux-x86_64/wheel/genesis
+creating build/bdist.linux-x86_64/wheel/genesis/environment
+copying build/lib/genesis/environment/generation.py -> build/bdist.linux-x86_64/wheel/./genesis/environment
+copying build/lib/genesis/environment/resources.py -> build/bdist.linux-x86_64/wheel/./genesis/environment
+copying build/lib/genesis/environment/__init__.py -> build/bdist.linux-x86_64/wheel/./genesis/environment
+creating build/bdist.linux-x86_64/wheel/genesis/lab
+copying build/lib/genesis/lab/metrics.py -> build/bdist.linux-x86_64/wheel/./genesis/lab
+copying build/lib/genesis/lab/__init__.py -> build/bdist.linux-x86_64/wheel/./genesis/lab
+copying build/lib/genesis/config.py -> build/bdist.linux-x86_64/wheel/./genesis
+creating build/bdist.linux-x86_64/wheel/genesis/agents
+copying build/lib/genesis/agents/__init__.py -> build/bdist.linux-x86_64/wheel/./genesis/agents
+copying build/lib/genesis/cli.py -> build/bdist.linux-x86_64/wheel/./genesis
+creating build/bdist.linux-x86_64/wheel/genesis/chemistry
+copying build/lib/genesis/chemistry/__init__.py -> build/bdist.linux-x86_64/wheel/./genesis/chemistry
+creating build/bdist.linux-x86_64/wheel/genesis/viewer
+copying build/lib/genesis/viewer/__init__.py -> build/bdist.linux-x86_64/wheel/./genesis/viewer
+copying build/lib/genesis/__main__.py -> build/bdist.linux-x86_64/wheel/./genesis
+creating build/bdist.linux-x86_64/wheel/genesis/history
+copying build/lib/genesis/history/artifacts.py -> build/bdist.linux-x86_64/wheel/./genesis/history
+copying build/lib/genesis/history/__init__.py -> build/bdist.linux-x86_64/wheel/./genesis/history
+creating build/bdist.linux-x86_64/wheel/genesis/evolution
+copying build/lib/genesis/evolution/__init__.py -> build/bdist.linux-x86_64/wheel/./genesis/evolution
+copying build/lib/genesis/py.typed -> build/bdist.linux-x86_64/wheel/./genesis
+copying build/lib/genesis/__init__.py -> build/bdist.linux-x86_64/wheel/./genesis
+creating build/bdist.linux-x86_64/wheel/genesis/core
+copying build/lib/genesis/core/topology.py -> build/bdist.linux-x86_64/wheel/./genesis/core
+copying build/lib/genesis/core/simulation.py -> build/bdist.linux-x86_64/wheel/./genesis/core
+copying build/lib/genesis/core/state.py -> build/bdist.linux-x86_64/wheel/./genesis/core
+copying build/lib/genesis/core/rng.py -> build/bdist.linux-x86_64/wheel/./genesis/core
+copying build/lib/genesis/core/__init__.py -> build/bdist.linux-x86_64/wheel/./genesis/core
+running install_egg_info
+Copying src/genesis_alife.egg-info to build/bdist.linux-x86_64/wheel/./genesis_alife-0.1.0-py3.12.egg-info
+running install_scripts
+creating build/bdist.linux-x86_64/wheel/genesis_alife-0.1.0.dist-info/WHEEL
+creating '/workspace/scratch/095cb6e2bf9c/Genesis/dist/.tmp-yme2w57f/genesis_alife-0.1.0-py3-none-any.whl' and adding 'build/bdist.linux-x86_64/wheel' to it
+adding 'genesis/__init__.py'
+adding 'genesis/__main__.py'
+adding 'genesis/cli.py'
+adding 'genesis/config.py'
+adding 'genesis/py.typed'
+adding 'genesis/agents/__init__.py'
+adding 'genesis/chemistry/__init__.py'
+adding 'genesis/core/__init__.py'
+adding 'genesis/core/rng.py'
+adding 'genesis/core/simulation.py'
+adding 'genesis/core/state.py'
+adding 'genesis/core/topology.py'
+adding 'genesis/environment/__init__.py'
+adding 'genesis/environment/generation.py'
+adding 'genesis/environment/resources.py'
+adding 'genesis/evolution/__init__.py'
+adding 'genesis/history/__init__.py'
+adding 'genesis/history/artifacts.py'
+adding 'genesis/lab/__init__.py'
+adding 'genesis/lab/metrics.py'
+adding 'genesis/viewer/__init__.py'
+adding 'genesis_alife-0.1.0.dist-info/METADATA'
+adding 'genesis_alife-0.1.0.dist-info/WHEEL'
+adding 'genesis_alife-0.1.0.dist-info/entry_points.txt'
+adding 'genesis_alife-0.1.0.dist-info/top_level.txt'
+adding 'genesis_alife-0.1.0.dist-info/RECORD'
+removing build/bdist.linux-x86_64/wheel
+Successfully built genesis_alife-0.1.0.tar.gz and genesis_alife-0.1.0-py3-none-any.whl
+* Getting build dependencies for sdist...
+warning: no files found matching '*.md' under directory 'experiments'
+warning: no files found matching '*.json' under directory 'experiments'
+warning: no files found matching '*.jsonl' under directory 'experiments'
+warning: no files found matching '*.yaml' under directory 'experiments'
+warning: no files found matching '*.npz' under directory 'experiments'
+warning: no files found matching '*.log' under directory 'experiments'
+warning: no files found matching '*.txt' under directory 'experiments'
+* Building sdist...
+warning: no files found matching '*.md' under directory 'experiments'
+warning: no files found matching '*.json' under directory 'experiments'
+warning: no files found matching '*.jsonl' under directory 'experiments'
+warning: no files found matching '*.yaml' under directory 'experiments'
+warning: no files found matching '*.npz' under directory 'experiments'
+warning: no files found matching '*.log' under directory 'experiments'
+warning: no files found matching '*.txt' under directory 'experiments'
+* Building wheel from sdist
+* Getting build dependencies for wheel...
+warning: no files found matching '*.md' under directory 'experiments'
+warning: no files found matching '*.json' under directory 'experiments'
+warning: no files found matching '*.jsonl' under directory 'experiments'
+warning: no files found matching '*.yaml' under directory 'experiments'
+warning: no files found matching '*.npz' under directory 'experiments'
+warning: no files found matching '*.log' under directory 'experiments'
+warning: no files found matching '*.txt' under directory 'experiments'
+* Building wheel...
+warning: no files found matching '*.md' under directory 'experiments'
+warning: no files found matching '*.json' under directory 'experiments'
+warning: no files found matching '*.jsonl' under directory 'experiments'
+warning: no files found matching '*.yaml' under directory 'experiments'
+warning: no files found matching '*.npz' under directory 'experiments'
+warning: no files found matching '*.log' under directory 'experiments'
+warning: no files found matching '*.txt' under directory 'experiments'

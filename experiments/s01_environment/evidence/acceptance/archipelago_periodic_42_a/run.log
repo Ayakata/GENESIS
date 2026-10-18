@@ -1,0 +1,2 @@
+INFO genesis: Started seed=42 shape=(64, 96) steps=200
+INFO genesis: Completed tick=200 balance_error=3.64e-12
